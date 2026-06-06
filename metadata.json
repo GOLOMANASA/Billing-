@@ -1,0 +1,6 @@
+{
+  "name": "Malar Auto Garage",
+  "description": "Professional billing software for Malar Auto Garage with client management, bulk product upload, QR code payment generator, and WhatsApp billing support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

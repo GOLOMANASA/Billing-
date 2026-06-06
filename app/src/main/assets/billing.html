@@ -1,0 +1,2356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malar Auto Garage - Professional Billing Software</title>
+    <!-- Tailwind CSS & FontAwesome Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================
+           BENTO GRID LIGHT THEME SYSTEM OVERRIDES
+           ========================================== */
+        :root {
+            --bg-bento: #F3F6FF;
+            --bg-card: #FFFFFF;
+            --border-bento: #DDE2EA;
+            --text-primary: #1A1C1E;
+            --text-secondary: #5C6066;
+            --primary-indigo: #4F46E5;
+            --primary-indigo-hover: #4338CA;
+            --accent-emerald: #059669;
+            --accent-rose: #DC2626;
+            --accent-rose-light: #FEF2F2;
+            --accent-amber: #D97706;
+            --accent-amber-light: #FFFBEB;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-bento) !important;
+            color: var(--text-primary) !important;
+        }
+        .heading-font {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .mono-font {
+            font-family: 'JetBrains Mono', sans-serif;
+        }
+
+        /* Enforce global light workspace background */
+        #authApp, #loginScreen, #mainDashboard, .tab-pane, main, .bg-slate-950 {
+            background-color: var(--bg-bento) !important;
+        }
+
+        /* Bento Cards & Containers styling */
+        .bg-slate-900, .bg-slate-950\/50, .bg-slate-950\/60, .bg-slate-900\/50, .bg-slate-900\/40, .bg-slate-900\/20, .bg-slate-900\/30 {
+            background-color: var(--bg-card) !important;
+            border: 1px solid var(--border-bento) !important;
+            color: var(--text-primary) !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -2px rgba(0, 0, 0, 0.02) !important;
+        }
+        
+        /* Specific roundings fit for Bento Grid aesthetics */
+        .rounded-2xl, .rounded-3xl {
+            border-radius: 24px !important;
+        }
+        .rounded-xl {
+            border-radius: 16px !important;
+        }
+
+        /* Scrollbars in bento palette */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+
+        /* High-specificity color mapping */
+        .text-white, .text-slate-100, .text-slate-200, .text-slate-300 {
+            color: var(--text-primary) !important;
+        }
+        .text-slate-400, .text-slate-500, .text-slate-600, .text-slate-350 {
+            color: var(--text-secondary) !important;
+        }
+
+        /* Revenue / Sales Overview Highlight Card (Main Bento module stays dark indigo for focus contrast) */
+        #statsBar {
+            background-color: var(--bg-card) !important;
+            border-bottom: 1px solid var(--border-bento) !important;
+            color: var(--text-secondary) !important;
+        }
+        #statsBar span, #statsBar strong {
+            color: var(--text-primary) !important;
+        }
+        #statsBar .text-amber-500, #statsBar .text-white, #statsBar .text-red-400 {
+            color: var(--primary-indigo) !important;
+        }
+
+        /* Inputs customized for clean bento typing */
+        input, select, textarea {
+            background-color: #F8FAFC !important;
+            border: 1px solid var(--border-bento) !important;
+            color: var(--text-primary) !important;
+            border-radius: 12px !important;
+            font-weight: 500 !important;
+            transition: all 0.2s ease-in-out !important;
+        }
+        input:focus, select:focus, textarea:focus {
+            background-color: #FFFFFF !important;
+            border-color: var(--primary-indigo) !important;
+            outline: none !important;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
+        }
+        input::placeholder, textarea::placeholder {
+            color: #94A3B8 !important;
+        }
+
+        /* Table custom styling for bento lists */
+        thead {
+            background-color: #F8FAFC !important;
+            border-bottom: 2px solid var(--border-bento) !important;
+        }
+        thead th {
+            color: var(--text-secondary) !important;
+            font-weight: 700 !important;
+        }
+        tbody tr {
+            border-bottom: 1px solid var(--border-bento) !important;
+            background-color: #FFFFFF !important;
+            transition: background-color 0.15s ease !important;
+        }
+        tbody tr:hover {
+            background-color: #F8FAFC !important;
+        }
+
+        /* Buttons color remaps to Indigo or Emerald */
+        .bg-amber-500, .bg-indigo-600, .tab-btn.bg-amber-500, .bg-emerald-500 {
+            background-color: var(--primary-indigo) !important;
+            color: #FFFFFF !important;
+            border: none !important;
+        }
+        .bg-amber-500:hover, .bg-indigo-600:hover, .bg-emerald-500:hover {
+            background-color: var(--primary-indigo-hover) !important;
+        }
+
+        /* Special overrides for dynamic save button since emerald is semantic for saving */
+        button[onclick="saveInvoice()"], .bg-emerald-500 {
+            background-color: var(--accent-emerald) !important;
+            color: #FFFFFF !important;
+        }
+        button[onclick="saveInvoice()"]:hover {
+            background-color: #047857 !important;
+        }
+
+        /* Reset and Form Secondary buttons */
+        button[onclick="resetBill()"], .bg-slate-800 {
+            background-color: #F1F5F9 !important;
+            border: 1px solid var(--border-bento) !important;
+            color: var(--primary-indigo) !important;
+        }
+        button[onclick="resetBill()"]:hover, .bg-slate-800:hover {
+            background-color: #E2E8F0 !important;
+        }
+
+        /* Accent classes and icons */
+        .text-amber-500, i.text-amber-500, span.text-amber-500, i.fa-screwdriver-wrench, i.fa-motorcycle, i.fa-gear {
+            color: var(--primary-indigo) !important;
+        }
+
+        /* Suggestion drops */
+        #custSuggestions, #itemSuggestions {
+            background-color: #FFFFFF !important;
+            border: 1px solid var(--border-bento) !important;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1) !important;
+        }
+        #custSuggestions div, #itemSuggestions div {
+            color: var(--text-primary) !important;
+            border-bottom: 1px solid #F1F5F9 !important;
+        }
+        #custSuggestions div:hover, #itemSuggestions div:hover {
+            background-color: var(--primary-indigo) !important;
+            color: #FFFFFF !important;
+        }
+
+        /* QR block colors in dashboard bento */
+        #paymentQrBlock {
+            background-color: #F8FAFC !important;
+            border: 1px solid var(--border-bento) !important;
+        }
+
+        /* Badges status settings */
+        .bg-emerald-500\/10, .bg-emerald-500\/20 {
+            background-color: #DEF7EC !important;
+            color: #03543F !important;
+            border: 1px solid #BCF0DA !important;
+        }
+        .bg-rose-500\/10, .bg-rose-500\/20, .bg-amber-505 {
+            background-color: #FDE8E8 !important;
+            color: #9B1C1C !important;
+            border: 1px solid #F8B4B4 !important;
+        }
+
+        /* Header visuals */
+        header {
+            background-color: #FFFFFF !important;
+            border-bottom: 1px solid var(--border-bento) !important;
+        }
+        header p, header h2 {
+            color: var(--text-primary) !important;
+        }
+        header .text-amber-500 {
+            color: var(--primary-indigo) !important;
+        }
+
+        /* Tabs list selectors container */
+        nav.bg-slate-950 {
+            background-color: #F1F5F9 !important;
+            border: 1px solid var(--border-bento) !important;
+        }
+        .tab-btn {
+            color: var(--text-secondary) !important;
+            transition: all 0.2s ease-in-out !important;
+        }
+        .tab-btn:hover {
+            color: var(--text-primary) !important;
+            background-color: #E2E8F0 !important;
+        }
+
+        /* Auth system styling updates */
+        #loginScreen .bg-slate-900 {
+            background-color: #FFFFFF !important;
+            border: 1px solid var(--border-bento) !important;
+        }
+        #loginScreen .bg-slate-950 {
+            background-color: #F8FAFC !important;
+        }
+
+        /* Modals content background color fix */
+        #billPreviewModal, #recycleBinModal {
+            background-color: rgba(9, 13, 22, 0.7) !important;
+            backdrop-filter: blur(4px) !important;
+        }
+        #recycleBinModal .bg-slate-900 {
+            background-color: #FFFFFF !important;
+            border: 1px solid var(--border-bento) !important;
+            color: var(--text-primary) !important;
+        }
+        #recycleBinModal h3, #recycleBinModal p {
+            color: var(--text-primary) !important;
+        }
+
+        .autocomplete-active {
+            background-color: var(--primary-indigo) !important;
+            color: white !important;
+        }
+
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-full {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+            }
+            .print-black {
+                color: black !important;
+                border-color: #000 !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950">
+
+    <!-- Auth Protected Screen Wrapper -->
+    <div id="authApp" class="flex-grow flex flex-col">
+        <!-- LOGIN SCREEN -->
+        <div id="loginScreen" class="flex-grow flex items-center justify-center p-4">
+            <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl shadow-2xl max-w-md w-full relative overflow-hidden">
+                <!-- Decorative border glow -->
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-amber-500 rounded-full blur-3xl opacity-10"></div>
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-zinc-500 rounded-full blur-3xl opacity-10"></div>
+
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-500/10 text-amber-500 mb-4 border border-amber-500/20">
+                        <i class="fa-solid fa-screwdriver-wrench text-2xl"></i>
+                    </div>
+                    <h1 class="text-3xl font-bold tracking-tight heading-font text-white">Malar Auto Garage</h1>
+                    <p class="text-xs tracking-wider text-amber-500 font-semibold uppercase mt-1">Best In Town #BLACKPERALRIDERS</p>
+                </div>
+
+                <form id="loginForm" class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Select User Profile</label>
+                        <select id="loginUser" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 transition duration-150">
+                            <option value="vijay">Vijay (Admin)</option>
+                            <option value="Gowtham">Gowtham (Staff 1)</option>
+                            <option value="Naveen">Naveen (Staff 2)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Password</label>
+                        <div class="relative">
+                            <input type="password" id="loginPassword" placeholder="••••" required class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-11 pr-4 py-3 text-white placeholder-slate-600 focus:outline-none focus:border-amber-500 transition duration-150">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600">
+                                <i class="fa-solid fa-lock"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div id="loginError" class="text-xs text-red-400 text-center font-medium hidden">
+                        <i class="fa-solid fa-circle-exclamation mr-1"></i> Invalid Password. Please check and try again!
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-amber-500 hover:bg-amber-600 active:transform active:scale-95 text-slate-950 font-bold heading-font rounded-xl transition shadow-lg shadow-amber-500/10 flex items-center justify-center gap-2">
+                        <span>Access Billing System</span>
+                        <i class="fa-solid fa-arrow-right text-sm"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MAIN APPLICATION WORKSPACE -->
+        <div id="mainDashboard" class="hidden flex-grow flex flex-col">
+            <!-- HEADER -->
+            <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 sticky top-0 z-30 no-print">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold text-xl">
+                            <i class="fa-solid fa-motorcycle"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-white heading-font tracking-tight">Malar Auto Garage</h2>
+                            <p class="text-[10px] text-amber-500 font-semibold uppercase tracking-widest leading-none">Best In Town #BLACKPERALRIDERS</p>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Tabs -->
+                    <nav class="flex items-center bg-slate-950 p-1 rounded-xl border border-slate-800">
+                        <button onclick="switchTab('billing')" id="tabBtn-billing" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition text-white bg-amber-500 text-slate-950">
+                            <i class="fa-solid fa-file-invoice"></i> Create Bill
+                        </button>
+                        <button onclick="switchTab('invoices')" id="tabBtn-invoices" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition text-slate-400 hover:text-white">
+                            <i class="fa-solid fa-receipt"></i> Invoices
+                        </button>
+                        <button onclick="switchTab('products')" id="tabBtn-products" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition text-slate-400 hover:text-white">
+                            <i class="fa-solid fa-cubes"></i> Inventory
+                        </button>
+                        <button onclick="switchTab('settings')" id="tabBtn-settings" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg flex items-center gap-1.5 transition text-slate-400 hover:text-white">
+                            <i class="fa-solid fa-sliders"></i> Settings
+                        </button>
+                    </nav>
+
+                    <!-- Active User Info & Logout -->
+                    <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-xl">
+                            <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                            <span id="currentUserDisplay" class="text-xs font-semibold text-slate-300">Vijay</span>
+                        </div>
+                        <button onclick="logout()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold rounded-xl border border-slate-700/50 flex items-center gap-1 transition">
+                            <i class="fa-solid fa-right-from-bracket"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- STATS / RECENT ACTIVITY CAROUSEL -->
+            <div id="statsBar" class="bg-slate-950/60 border-b border-slate-900 px-6 py-3 text-xs text-slate-400 no-print">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <span class="inline-flex items-center gap-1.5 text-amber-500 font-semibold">
+                            <i class="fa-solid fa-chart-line"></i> Report Dashboard:
+                        </span>
+                        <span>Total Invoices Saved: <strong class="text-white" id="statTotalInvoices">0</strong></span>
+                        <span class="text-slate-700">|</span>
+                        <span>Outstanding Balances: <strong class="text-red-400" id="statPendingCount">0 Customers</strong> (<strong class="text-red-400" id="statPendingAmt">₹0</strong>)</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-slate-900 px-3 py-1 rounded-lg text-[11px] text-slate-400">
+                        <i class="fa-solid fa-history text-amber-500"></i>
+                        <span class="font-medium text-slate-300">Live Workspace Activity:</span>
+                        <span id="activityTicker">Software active. Welcome back.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB CONTENT CONTAINER -->
+            <main class="flex-grow p-6 overflow-y-auto">
+
+                <!-- TAB: CREATE BILL -->
+                <div id="tab-billing" class="tab-pane space-y-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Invoice Creator Panel (2 Cols) -->
+                        <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-6">
+                            
+                            <!-- Invoice Meta Info Grid -->
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-slate-950/50 p-4 border border-slate-800/80 rounded-xl">
+                                <div>
+                                    <label class="block text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-1">Invoice Number</label>
+                                    <input type="text" id="billInvoiceNum" placeholder="AUTO" class="w-full bg-slate-900 border border-slate-800 text-white font-bold rounded-lg px-3 py-2 text-sm focus:border-amber-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-1">Invoice Date</label>
+                                    <input type="date" id="billDate" class="w-full bg-slate-900 border border-slate-800 text-white rounded-lg px-3 py-2 text-sm focus:border-amber-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-1">GST/VAT # (Optional)</label>
+                                    <input type="text" id="billGstNumber" value="GSTIN-33MALAR2026B" class="w-full bg-slate-900 border border-slate-800 text-white rounded-lg px-3 py-2 text-sm focus:border-amber-500 focus:outline-none">
+                                </div>
+                                <div class="flex items-end">
+                                    <button onclick="resetBill()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition flex items-center justify-center gap-1.5">
+                                        <i class="fa-solid fa-rotate"></i> Reset Form
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Customer Input Controls -->
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-sm font-semibold heading-font text-white flex items-center gap-1.5">
+                                        <i class="fa-solid fa-user-gear text-amber-500"></i> Customer & Vehicle Details
+                                    </h3>
+                                    <button onclick="toggleAddressField()" id="btnToggleAddress" class="text-[11px] font-medium text-amber-500 hover:underline flex items-center gap-1">
+                                        <i class="fa-solid fa-plus-circle"></i> Add Address (Optional)
+                                    </button>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="relative">
+                                        <label class="block text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-1">Customer Name</label>
+                                        <input type="text" id="custName" placeholder="Type customer name (Walk-In default)" autocomplete="off" class="w-full bg-slate-950 border border-slate-800 text-white placeholder-slate-600 rounded-lg px-3 py-2 text-sm focus:border-amber-500 focus:outline-none">
+                                        <div id="custSuggestions" class="absolute left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-slate-900 border border-slate-800 rounded-lg shadow-xl z-50 hidden"></div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-1">Customer Contact / Whatsapp #</label>
+                                        <input type="tel" id="custPhone" placeholder="Enter phone number" class="w-full bg-slate-950 border border-slate-800 text-white placeholder-slate-600 rounded-lg px-3 py-2 text-sm focus:border-amber-500 focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-1">Vehicle License Number</label>
+                                        <input type="text" id="custVehicle" placeholder="e.g. TN-45-AZ-1234" class="w-full bg-slate-950 border border-slate-800 text-white placeholder-slate-600 rounded-lg px-3 py-2 text-sm focus:border-amber-500 focus:outline-none">
+                                    </div>
+                                </div>
+
+                                <!-- Optional Address Area -->
+                                <div id="addressContainer" class="hidden">
+                                    <label class="block text-[10px] font-bold uppercase text-slate-400 tracking-wider mb-1">Customer Address</label>
+                                    <textarea id="custAddress" rows="2" placeholder="Full Billing address" class="w-full bg-slate-950 border border-slate-800 text-white placeholder-slate-600 rounded-lg p-3 text-sm focus:border-amber-500 focus:outline-none"></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Products Billing Entry Table -->
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <h3 class="text-sm font-semibold heading-font text-white flex items-center gap-1.5">
+                                        <i class="fa-solid fa-list-check text-amber-500"></i> Added Products & Spares
+                                    </h3>
+                                    <span class="text-[11px] text-slate-400 flex items-center gap-1 bg-slate-955 bg-indigo-500/10 px-2.5 py-1 rounded-md border border-indigo-500/20">
+                                        <i class="fa-solid fa-keyboard text-amber-500"></i>
+                                        Press <strong>Enter</strong> in rows to append a new item row
+                                    </span>
+                                </div>
+
+                                <!-- Search & Selection Block with Keys -->
+                                <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 relative">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-slate-500 p-1"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                        <input type="text" id="prodSearch" placeholder="Type spare part name / product to search... Use Keyboard arrows to select" autocomplete="off" class="w-full bg-transparent text-white placeholder-slate-600 text-sm focus:outline-none py-1">
+                                    </div>
+                                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[9px] font-semibold text-slate-500 uppercase tracking-wide">Press ↓ Arrow to Search</span>
+                                    
+                                    <!-- Embedded Autocomplete -->
+                                    <div id="itemSuggestions" class="absolute left-0 right-0 mt-3 max-h-56 overflow-y-auto bg-slate-900 border border-slate-800 rounded-lg shadow-2xl z-50 hidden"></div>
+                                </div>
+
+                                <div class="overflow-x-auto rounded-xl border border-slate-800">
+                                    <table class="w-full text-sm text-left">
+                                        <thead class="text-xs text-slate-400 uppercase bg-slate-950/80 border-b border-slate-800">
+                                            <tr>
+                                                <th scope="col" class="px-3 py-3 w-8 text-center">#</th>
+                                                <th scope="col" class="px-4 py-3">Description / Item Name</th>
+                                                <th scope="col" class="px-4 py-3 w-28 text-right">Price (₹)</th>
+                                                <th scope="col" class="px-4 py-3 w-24 text-right">Qty</th>
+                                                <th scope="col" class="px-4 py-3 w-32 text-right">Total (₹)</th>
+                                                <th scope="col" class="px-3 py-3 w-12 text-center">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="billingTableBody" class="divide-y divide-slate-800 bg-slate-900/50">
+                                            <!-- Dynamic Rows populated in JS -->
+                                        </tbody>
+                                        <tfoot>
+                                            <tr class="bg-slate-950/20 border-t border-slate-800">
+                                                <td colspan="3" class="px-4 py-3 font-semibold text-right text-slate-400">Total Items: <span id="billTotalItemCount" class="text-white font-medium">0</span></td>
+                                                <td class="px-4 py-3 font-semibold text-right text-slate-400">Subtotal:</td>
+                                                <td class="px-4 py-3 font-bold text-right text-white text-base">₹<span id="billGrandTotalText">0.00</span></td>
+                                                <td></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Additional Bill Meta (Image list, Stamp, custom specifications) -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-slate-800">
+                                <div class="space-y-3">
+                                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Stamp & Payment Verification</h4>
+                                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-4">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-amber-500 font-semibold text-xs"><i class="fa-solid fa-stamp"></i> Digital Stamp:</span>
+                                            <span class="text-[10px] text-slate-500 uppercase tracking-widest bg-slate-900 border border-slate-800 px-2 py-0.5 rounded">AUTO APPROVED</span>
+                                        </div>
+                                        <div class="border-t border-dashed border-slate-800 pt-3">
+                                            <div class="text-[11px] font-semibold text-slate-400 flex items-center justify-between mb-1.5">
+                                                <span>Active Workshop Payment QR Title:</span>
+                                                <input type="text" id="billQrTitle" value="Malar Garage Cashier" class="bg-slate-900 border border-slate-700 rounded px-2 py-0.5 text-[10px] text-white focus:outline-none focus:border-amber-500">
+                                            </div>
+                                            <p class="text-[10px] text-slate-500 bg-slate-900 p-2 rounded border border-slate-800">Digital stamp validation matches workshop metadata. No paper receipts are needed for warranties.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-3">
+                                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Garages Billing Annex (Optional Photos)</h4>
+                                    <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-2">
+                                        <label class="block text-[11px] text-slate-400">Capture or attach bike/parts visual condition photo:</label>
+                                        <div class="flex items-center gap-3">
+                                            <input type="file" id="billPhotoUpload" accept="image/*" class="hidden" onchange="handleBillPhotoUpload(event)">
+                                            <button onclick="document.getElementById('billPhotoUpload').click()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs font-semibold text-white border border-slate-700 transition flex items-center gap-1.5">
+                                                <i class="fa-solid fa-camera"></i> Pick Image
+                                            </button>
+                                            <div id="billPhotoStatus" class="text-[11px] text-slate-500 italic">No image file chosen</div>
+                                        </div>
+                                        <div id="billPhotoPreviewContainer" class="hidden relative inline-block mt-2">
+                                            <img id="billPhotoPreview" src="#" alt="Spare part preview" class="rounded h-16 w-24 object-cover border border-slate-700">
+                                            <button onclick="removeAttachedPhoto()" class="absolute -top-1.5 -right-1.5 bg-red-600 hover:bg-red-700 text-white w-4 h-4 rounded-full flex items-center justify-center text-[9px]"><i class="fa-solid fa-x"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Invoice Action Panel (1 Col) -->
+                        <div class="space-y-6">
+                            <!-- Live Totals and Advance Table -->
+                            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                                <div class="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500 rounded-full blur-3xl opacity-10"></div>
+                                
+                                <h3 class="text-sm font-semibold heading-font text-white mb-4 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-calculator text-amber-500"></i> Financial Adjustments
+                                </h3>
+
+                                <div class="space-y-4">
+                                    <!-- Advance payment inputs -->
+                                    <div class="bg-slate-950 p-4 border border-slate-800 rounded-xl space-y-3">
+                                        <div>
+                                            <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1 block">Advance Payment Received (₹)</label>
+                                            <input type="number" id="billAdvance" min="0" value="0" oninput="calculateTotals()" placeholder="0" class="w-full bg-slate-905 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-white font-bold text-sm focus:border-amber-500 focus:outline-none">
+                                        </div>
+                                        <div>
+                                            <label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-1 block">GST Rate (%)</label>
+                                            <input type="number" id="billGstPercent" min="0" value="0" oninput="calculateTotals()" placeholder="0" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-white font-bold text-sm focus:border-amber-500 focus:outline-none">
+                                        </div>
+                                    </div>
+
+                                    <!-- Calculated rows -->
+                                    <div class="space-y-2 mt-4 text-sm px-1">
+                                        <div class="flex items-center justify-between text-slate-400">
+                                            <span>Subtotal</span>
+                                            <span class="mono-font">₹<span id="summarySubtotal">0.00</span></span>
+                                        </div>
+                                        <div class="flex items-center justify-between text-slate-400">
+                                            <span id="summaryGstLabel">GST (0%)</span>
+                                            <span class="mono-font">₹<span id="summaryGstAmount">0.00</span></span>
+                                        </div>
+                                        <div class="border-t border-slate-800 my-2"></div>
+                                        <div class="flex items-center justify-between text-white font-bold text-base">
+                                            <span>Grand Total</span>
+                                            <span class="mono-font text-emerald-400">₹<span id="summaryGrandTotal">0.00</span></span>
+                                        </div>
+                                        <div class="flex items-center justify-between text-slate-400 pt-1">
+                                            <span>Paid (Advance)</span>
+                                            <span class="mono-font text-slate-300">- ₹<span id="summaryAdvance">0.00</span></span>
+                                        </div>
+                                        <div class="flex items-center justify-between text-white font-bold border-t border-dashed border-slate-800 pt-2 mt-1">
+                                            <span>Balance Due</span>
+                                            <span class="mono-font text-amber-500">₹<span id="summaryBalance">0.00</span></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- QR Code Generator Area -->
+                                    <div id="paymentQrBlock" class="p-4 bg-slate-950 border border-slate-800 rounded-xl flex flex-col items-center justify-center text-center space-y-2.5">
+                                        <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400">QR PAYMENT GENERATOR</span>
+                                        <div class="bg-white p-2.5 rounded-lg inline-block shadow-inner" id="qrcodeCanvas">
+                                            <!-- Simple inline fallback API to load QR online or offline fallback -->
+                                            <img id="qrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=MalarAutoGarage" alt="UPI QR Code" class="h-28 w-28">
+                                        </div>
+                                        <h5 class="text-[11px] font-bold text-amber-500 uppercase tracking-widest" id="paymentQrTitle">MALAR GARAGE CASHIER</h5>
+                                        <p class="text-[9px] text-slate-500">Scan to pay exact balance of <strong class="text-white" id="qrBalanceVal">₹0.00</strong></p>
+                                    </div>
+
+                                    <!-- SAVE ACTIONS -->
+                                    <div class="space-y-3 pt-2">
+                                        <button onclick="saveInvoice()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 active:transform active:scale-95 text-slate-950 font-bold heading-font rounded-xl transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+                                            <i class="fa-solid fa-floppy-disk text-sm"></i>
+                                            <span>Save Invoice Record</span>
+                                        </button>
+
+                                        <button onclick="openInstantReceiptPreview()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-100 font-semibold text-xs rounded-xl border border-slate-700 transition flex items-center justify-center gap-2">
+                                            <i class="fa-solid fa-eye text-xs"></i>
+                                            <span>Preview Bill Page</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- TAB: INVOICES -->
+                <div id="tab-invoices" class="tab-pane space-y-6 hidden">
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                        
+                        <!-- Search & Filter Controls -->
+                        <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 mb-6">
+                            <div>
+                                <h3 class="text-lg font-bold text-white heading-font">Saved Invoices Records</h3>
+                                <p class="text-xs text-slate-400">Browse, search, edit, receive outstanding balances, or safely purge invoices</p>
+                            </div>
+                            
+                            <div class="flex flex-wrap items-center gap-3">
+                                <!-- Search bar -->
+                                <div class="bg-slate-950 px-3 py-2 rounded-xl border border-slate-800 flex items-center gap-2 w-64">
+                                    <span class="text-slate-500 text-xs"><i class="fa-solid fa-magnifying-glass"></i></span>
+                                    <input type="text" id="invoiceSearchText" oninput="renderSavedInvoicesState()" placeholder="Search vehicle, name or invoice #" class="bg-transparent text-xs text-white placeholder-slate-600 focus:outline-none w-full">
+                                </div>
+
+                                <button onclick="openRecycleBinModal()" class="px-3.5 py-2 bg-rose-950/45 hover:bg-rose-900/60 text-red-400 hover:text-white border border-red-900/40 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition">
+                                    <i class="fa-solid fa-trash-can"></i> Recycle Bin
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Invoices Grid/Table -->
+                        <div class="overflow-x-auto rounded-xl border border-slate-800">
+                            <table class="w-full text-sm text-left">
+                                <thead class="text-xs text-slate-400 uppercase bg-slate-950/80 border-b border-slate-800">
+                                    <tr>
+                                        <th scope="col" class="px-4 py-3 text-center cursor-pointer hover:text-amber-500" onclick="toggleInvoiceSortOrder()">
+                                            Invoice # <i class="fa-solid fa-sort text-[10px]"></i>
+                                        </th>
+                                        <th scope="col" class="px-4 py-3">Date</th>
+                                        <th scope="col" class="px-4 py-3">Customer Details</th>
+                                        <th scope="col" class="px-4 py-3">Vehicle #</th>
+                                        <th scope="col" class="px-4 py-3 text-right">Grand Total</th>
+                                        <th scope="col" class="px-4 py-3 text-right">Advance Received</th>
+                                        <th scope="col" class="px-4 py-3 text-right">Balance Due</th>
+                                        <th scope="col" class="px-4 py-3 text-center">Status</th>
+                                        <th scope="col" class="px-4 py-3 text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="invoicesTableBody" class="divide-y divide-slate-800 bg-slate-900/40">
+                                    <tr>
+                                        <td colspan="9" class="text-center py-6 text-slate-500">No invoices saved yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- TAB: INVENTORY -->
+                <div id="tab-products" class="tab-pane space-y-6 hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Add/Edit Spare Part form -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                            <h3 class="text-md font-bold text-white heading-font mb-2" id="inventoryFormTitle">Add New Spare Part / Service</h3>
+                            
+                            <form id="productForm" class="space-y-4">
+                                <input type="hidden" id="inventoryEditId" value="">
+                                
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Product Name / Spare Part Description</label>
+                                    <input type="text" id="inventoryName" required placeholder="e.g. Brake Pad (RTR 160)" class="w-full bg-slate-950 border border-slate-800 text-white placeholder-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-500">
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Price (₹)</label>
+                                        <input type="number" id="inventoryPrice" min="0" placeholder="e.g. 350" required class="w-full bg-slate-950 border border-slate-800 text-white placeholder-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">In-Stock Qty</label>
+                                        <input type="number" id="inventoryCount" min="0" placeholder="e.g. 10" required class="w-full bg-slate-950 border border-slate-800 text-white placeholder-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-500">
+                                    </div>
+                                </div>
+
+                                <div class="pt-2 flex items-center gap-3">
+                                    <button type="submit" class="flex-grow py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5">
+                                        <i class="fa-solid fa-save"></i> Save Product
+                                    </button>
+                                    <button type="button" onclick="cancelInventoryEdit()" id="btnCancelInventoryEdit" class="hidden px-3 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold rounded-xl border border-slate-700 transition">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+
+                            <!-- Bulk Loader Controls -->
+                            <div class="pt-5 border-t border-slate-800 space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Unrestricted Bulk Product Loader</h4>
+                                    <i class="fa-solid fa-rocket text-amber-500"></i>
+                                </div>
+                                <p class="text-[11px] text-slate-500 leading-relaxed">Import dozens or hundreds of spare parts instantly. Paste JSON metadata payload below to append to your catalog.</p>
+                                
+                                <textarea id="bulkJsonInput" rows="5" placeholder='[
+  {"name": "Engine Oil Motul 15W50", "price": 450, "stock": 25},
+  {"name": "Chain Sprocket Set", "price": 1400, "stock": 8}
+]' class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 font-mono focus:outline-none focus:border-amber-500"></textarea>
+                                
+                                <button onclick="handleBulkImport()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-upload"></i> Process Bulk Upload
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Live Product List display -->
+                        <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                            <div class="flex items-center justify-between flex-wrap gap-3">
+                                <div>
+                                    <h3 class="text-md font-bold text-white heading-font">Cycle Parts Catalogue</h3>
+                                    <p class="text-[11px] text-slate-400">Total Unique Spares/Services Saved: <strong class="text-white" id="inventoryStatsCount">0</strong></p>
+                                </div>
+                                <div class="bg-slate-950 px-3 py-1.5 rounded-xl border border-slate-800 flex items-center gap-1.5 w-48 text-xs">
+                                    <i class="fa-solid fa-magnifying-glass text-slate-500"></i>
+                                    <input type="text" id="inventorySearch" oninput="renderInventoryTableState()" placeholder="Filter products..." class="bg-transparent text-xs text-white placeholder-slate-600 focus:outline-none w-full">
+                                </div>
+                            </div>
+
+                            <div class="overflow-x-auto rounded-xl border border-slate-800">
+                                <table class="w-full text-sm text-left">
+                                    <thead class="text-xs text-slate-400 uppercase bg-slate-950/80 border-b border-slate-800">
+                                        <tr>
+                                            <th class="px-4 py-3">Inventory Name</th>
+                                            <th class="px-4 py-3 text-right">Direct Price (₹)</th>
+                                            <th class="px-4 py-3 text-right">In-Stock Qty</th>
+                                            <th class="px-4 py-3 text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="inventoryTableBody" class="divide-y divide-slate-800 bg-slate-900/40">
+                                        <!-- Loaded Dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: SETTINGS & DATABASE SYSTEM -->
+                <div id="tab-settings" class="tab-pane space-y-6 hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Invoice Number Controls & Preferences -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                            <h3 class="text-md font-bold text-white heading-font flex items-center gap-1.5"><i class="fa-solid fa-toolbox text-amber-500"></i> Billing Systems Settings</h3>
+                            <p class="text-xs text-slate-400 leading-relaxed">Customize invoice configurations. Your configurations apply automatically to physical screens and printed PDFs.</p>
+                            
+                            <div class="space-y-4 pt-2">
+                                <div>
+                                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Invoice Serial Counter Start Point (Next Bill)</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="number" id="cfgNextInvoiceNo" value="1001" class="bg-slate-950 border border-slate-800 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-500 w-32">
+                                        <button onclick="overrideInvoiceCounter()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold rounded-lg transition flex items-center gap-1">
+                                            Update Point
+                                        </button>
+                                        <button onclick="resetInvoiceCounter()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-red-400 border border-slate-700 text-xs font-bold rounded-lg transition flex items-center gap-1">
+                                            Reset (to 1001)
+                                        </button>
+                                    </div>
+                                    <p class="text-[10px] text-slate-500 mt-1">If bills are deleted, Malar Auto Garage preserves the next serial to ensure sequential bookkeeping.</p>
+                                </div>
+
+                                <div class="border-t border-slate-800/80 pt-4">
+                                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">Saved Customers Tag Register</h4>
+                                    <div class="p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between">
+                                        <span class="text-xs text-slate-400 leading-snug">System stores all unique customer names dynamically for quick type suggestions.</span>
+                                        <button onclick="clearSavedCustomersDatabase()" class="px-3 py-1.5 bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-900/50 rounded-lg text-xs font-bold transition">Clear Registry</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- System Overview & User Guide -->
+                        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
+                            <h3 class="text-md font-bold text-white heading-font flex items-center gap-1.5">
+                                <i class="fa-solid fa-wrench text-amber-500"></i> Malar Auto Garage Quick Reference
+                            </h3>
+                            <div class="text-xs text-slate-400 space-y-3 leading-relaxed">
+                                <p><strong class="text-emerald-400">Offline Standalone Mode:</strong> This responsive app runs completely within your native Android WebView cache. F5 refresh key is controlled so you stay safely on the page without losing billing configurations or active states!</p>
+                                <p><strong class="text-amber-400">Database Sync:</strong> All records are written locally using sandboxed client storage (`localStorage` & `IndexedDB`). You can download or print full invoice documents at any point.</p>
+                                
+                                <div class="border-t border-slate-800 pt-3">
+                                    <h4 class="text-xs font-bold text-slate-300 uppercase tracking-widest mb-2 flex items-center gap-1">
+                                        <i class="fa-solid fa-users text-amber-500"></i> Authorized Staff Credentials
+                                    </h4>
+                                    <ul class="space-y-1 text-[11px]">
+                                        <li>👨‍💼 Admin: <strong class="text-white">vijay</strong> (vijay0432)</li>
+                                        <li>🔧 Staff 1: <strong class="text-white">Gowtham</strong> (7708)</li>
+                                        <li>🔧 Staff 2: <strong class="text-white">Naveen</strong> (1928)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+
+    <!-- FULL SCREEN BILL PREVIEW MODAL -->
+    <div id="billPreviewModal" class="fixed inset-0 bg-slate-950/90 z-50 overflow-y-auto hidden">
+        <div class="min-h-screen px-4 py-8 flex items-center justify-center">
+            <div class="bg-white text-slate-950 max-w-4xl w-full rounded-2xl shadow-2xl overflow-hidden overflow-y-auto relative p-8 print-full print-black">
+                
+                <!-- Print and Actions Header Bar inside Modal -->
+                <div class="no-print bg-slate-900 -mx-8 -mt-8 px-8 py-4 mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-slate-800">
+                    <span class="text-sm font-bold text-white heading-font"><i class="fa-solid fa-magnifying-glass-chart text-amber-500 mr-2"></i>Invoice Printing & Share Engine</span>
+                    
+                    <div class="flex items-center gap-2">
+                        <button onclick="printInvoice()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold rounded-lg flex items-center gap-1.5 transition">
+                            <i class="fa-solid fa-print"></i> Print Invoice
+                        </button>
+                        <button onclick="shareViaWhatsapp()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg flex items-center gap-1.5 transition">
+                            <i class="fa-brands fa-whatsapp text-sm"></i> Send Invoice WhatsApp
+                        </button>
+                        <button onclick="closeInvoicePreview()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-350 text-xs font-semibold rounded-lg border border-slate-700 transition">
+                            Close Preview
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Printable Invoice Wrapper -->
+                <div id="printableBillArea" class="space-y-6">
+                    <!-- Invoice Header (Shop details) -->
+                    <div class="flex flex-col md:flex-row items-stretch md:items-start justify-between gap-4 border-b pb-6 border-slate-200">
+                        <div class="space-y-1">
+                            <h2 class="text-3xl font-black heading-font tracking-tight text-slate-900 border-b-2 border-slate-900 pb-1" id="prtShopName">Malar Auto Garage</h2>
+                            <p class="text-xs uppercase font-bold text-slate-500 tracking-wider">Automobile Spares & Service Station</p>
+                            <p class="text-xs text-slate-500 max-w-xs mt-1">Specialists in Performance Spares, Engine Tuning, Shock Absorber repairs, and Custom Bike Upgrades.</p>
+                        </div>
+                        <div class="text-left md:text-right space-y-1">
+                            <p class="text-xl font-bold uppercase tracking-widest text-slate-600">TAX INVOICE</p>
+                            <p class="text-xs">Invoice #: <strong class="text-slate-900" id="prtInvoiceNo">0000</strong></p>
+                            <p class="text-xs">Date: <strong class="text-slate-900" id="prtDate">00/00/0000</strong></p>
+                            <p class="text-xs">Workshop GSTIN: <strong class="text-slate-900" id="prtGstNumber">-</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Customer & Vehicle Info Metadata -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 p-4 rounded-xl border border-slate-200 text-sm">
+                        <div class="space-y-1.5">
+                            <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400">BILLED TO</h4>
+                            <p class="font-bold text-slate-800" id="prtCustomerName">Walk-In Customer</p>
+                            <p class="text-xs text-slate-600">Contact #: <strong id="prtCustomerPhone">-</strong></p>
+                            <p class="text-xs text-slate-600" id="prtAddressBlock">Address: <strong id="prtCustomerAddress">-</strong></p>
+                        </div>
+                        <div class="space-y-1.5 text-left md:text-right">
+                            <h4 class="text-xs font-bold uppercase tracking-widest text-slate-400">WORKSHOP VEHICLE INFO</h4>
+                            <p class="font-black text-slate-800 text-base" id="prtVehicleNo">-</p>
+                            <p class="text-xs text-slate-600">Mechanic Operator: <strong id="prtBilledBy">Admin</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Items Table -->
+                    <div class="border border-slate-300 rounded-xl overflow-hidden mt-4">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-slate-100 text-xs uppercase font-bold text-slate-700 border-b border-slate-300">
+                                <tr>
+                                    <th class="px-4 py-2.5 w-8 text-center">#</th>
+                                    <th class="px-4 py-2.5">Item Description / Bike Spare Part</th>
+                                    <th class="px-4 py-2.5 w-24 text-right">Price (₹)</th>
+                                    <th class="px-4 py-2.5 w-16 text-center">Qty</th>
+                                    <th class="px-4 py-2.5 w-28 text-right">Total (₹)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="prtDetailsTableBody" class="divide-y divide-slate-200">
+                                <!-- Loaded in JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Ledger Summary & Balance due block -->
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-6 pt-4">
+                        <div class="md:col-span-7 flex flex-col justify-between space-y-4">
+                            <!-- Digital Stamp Area -->
+                            <div class="border border-slate-300 rounded-xl p-4 bg-slate-50 flex items-center justify-between gap-4">
+                                <div class="space-y-1">
+                                    <h5 class="text-xs font-bold text-slate-700 uppercase tracking-wider">GARAGES VALID RECEIPT STAMP</h5>
+                                    <p class="text-[10px] text-slate-500 leading-relaxed">Authorized stamp confirms payment validation. Original parts qualify under warranty.</p>
+                                </div>
+                                <!-- CSS Badge visual stamp -->
+                                <div class="flex-shrink-0 w-16 h-16 border-4 border-emerald-600 text-emerald-600 rounded-full flex flex-col items-center justify-center font-bold tracking-widest text-[9px] uppercase transform rotate-12">
+                                    <span>MALAR</span>
+                                    <span class="text-[7px]">VERIFIED</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-xl font-bold heading-font text-slate-900 italic" id="prtSlogan">Best In Town</h3>
+                                <p class="text-[#090d16] font-black tracking-widest text-[#090d16] text-xs mt-0.5">#BLACKPERALRIDERS</p>
+                            </div>
+                        </div>
+
+                        <!-- Financial summary layout -->
+                        <div class="md:col-span-5 bg-slate-50 rounded-xl p-4 border border-slate-300 text-sm space-y-2 text-slate-800">
+                            <div class="flex justify-between">
+                                <span>Subtotal:</span>
+                                <span class="font-bold text-slate-900">₹<span id="prtSubtotal">0.00</span></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span id="prtGstLabelText">GST (0%):</span>
+                                <span class="font-bold text-slate-900">₹<span id="prtGstAmt">0.00</span></span>
+                            </div>
+                            <hr class="border-slate-300">
+                            <div class="flex justify-between text-base font-black text-slate-950">
+                                <span>Grand Total:</span>
+                                <span>₹<span id="prtGrandTotal">0.00</span></span>
+                            </div>
+                            <div class="flex justify-between text-slate-600 text-xs">
+                                <span>Advance Payment Paid:</span>
+                                <span class="font-semibold">- ₹<span id="prtAdvance">0.00</span></span>
+                            </div>
+                            <hr class="border-dashed border-slate-300">
+                            <div class="flex justify-between text-base font-black bg-slate-200 p-2 rounded text-slate-950">
+                                <span>Outstanding Balance:</span>
+                                <span>₹<span id="prtBalance">0.00</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- QR code UPI block inside printable area -->
+                    <div class="border-t pt-4 border-slate-300 flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div class="space-y-1">
+                            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-widest flex items-center gap-1.5">
+                                <i class="fa-solid fa-qrcode text-emerald-600"></i> INSTANT BANK UPI SCAN PAYMENT
+                            </h4>
+                            <p class="text-[10px] text-slate-500">Scan this QR scanner code on your mobile banking app (GPay, PhonePe, Paytm) to clear balance dues securely.</p>
+                        </div>
+                        <div class="flex items-center gap-3 bg-slate-100 p-2.5 rounded-xl border">
+                            <div class="bg-white p-1 rounded border">
+                                <img id="prtQrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=MalarAutoGarage" alt="Receipt UPI QR Code" class="h-16 w-16">
+                            </div>
+                            <div>
+                                <h5 class="text-xs font-black text-slate-950 uppercase tracking-wide" id="prtPaymentTitle">MALAR GARAGE CASHIER</h5>
+                                <p class="text-[10px] text-slate-500">Balance: <strong class="text-slate-900" id="prtQrBalanceVal">₹0.00</strong></p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- RECYCLE BIN MODAL -->
+    <div id="recycleBinModal" class="fixed inset-0 bg-slate-950/90 z-50 overflow-y-auto hidden">
+        <div class="min-h-screen px-4 py-8 flex items-center justify-center">
+            <div class="bg-slate-900 border border-slate-800 text-white max-w-2xl w-full rounded-2xl shadow-2xl p-6 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <h3 class="text-md font-bold heading-font text-white flex items-center gap-2">
+                        <i class="fa-solid fa-dumpster-fire text-amber-500"></i> Invoices Recycle Bin (30-Day Validity Cache)
+                    </h3>
+                    <button onclick="closeRecycleBinModal()" class="text-slate-400 hover:text-white transition"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <p class="text-xs text-slate-400">Deleted invoices are preserved temporarily here in the cache. You can recover them to saved history or permanently wipe them anytime.</p>
+                
+                <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950">
+                    <table class="w-full text-xs text-left">
+                        <thead class="text-slate-400 uppercase bg-slate-900 border-b border-slate-800 font-semibold">
+                            <tr>
+                                <th class="px-4 py-2 text-center">Inv #</th>
+                                <th class="px-4 py-2">Customer Details</th>
+                                <th class="px-3 py-2 text-right">Grand Total</th>
+                                <th class="px-3 py-2 text-center">Deleted Date</th>
+                                <th class="px-4 py-2 text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="binTableBody" class="divide-y divide-slate-800">
+                            <tr>
+                                <td colspan="5" class="text-center py-6 text-slate-600">Recycle bin is completely empty.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="flex justify-end pt-2">
+                    <button onclick="closeRecycleBinModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg border border-slate-700 transition">
+                        Dismiss Panel
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- APP CUSTOM JAVASCRIPT LOGIC -->
+    <script>
+        // In-memory application state with client localStorage backups
+        let currentUser = null;
+        let products = [];
+        let customers = [];
+        let invoices = [];
+        let recycleBin = [];
+        let nextInvoiceNo = 1001;
+        let activeTab = 'billing';
+        let invoiceSortAsc = false; // Descending to Ascending order standard
+
+        // Active billing table lines structure
+        let activeBillingLines = [];
+        let currentAttachedPhoto = null;
+
+        // Suggestions keyboard tracking
+        let focusedSearchField = null; // 'cust' or 'prod'
+        let currentSuggestionsList = [];
+        let keyboardSelectedIndex = -1;
+
+        // Authorized User credentials
+        const USERS = {
+            vijay: { password: "vijay0432", name: "Vijay (Admin)", role: "admin" },
+            Gowtham: { password: "7708", name: "Gowtham (Staff 1)", role: "staff" },
+            Naveen: { password: "1928", name: "Naveen (Staff 2)", role: "staff" }
+        };
+
+        // Standard Default Spares Catalogue
+        const DEFAULT_CATALOGUE = [
+            { id: "p1", name: "Spark Plug Bosch M8", price: 120, stock: 50 },
+            { id: "p2", name: "Engine Lubricant Motul 4T", price: 420, stock: 30 },
+            { id: "p3", name: "Front Disc Brake pads TVS Apache", price: 380, stock: 15 },
+            { id: "p4", name: "Chain Guard Clamp Black", price: 80, stock: 12 },
+            { id: "p5", name: "Led Turn Signal Indicators set", price: 290, stock: 20 },
+            { id: "p6", name: "Clutch Cable Pulsar 150", price: 150, stock: 10 },
+            { id: "p7", name: "Oil Filter Premium Quality", price: 95, stock: 40 }
+        ];
+
+        // Prevents screen F5 wipe as required - "dont come back to home page while press f5 stay in the page"
+        window.addEventListener('beforeunload', function (e) {
+            e.preventDefault();
+            e.returnValue = 'Work in progress output. Do you want to reload?';
+        });
+
+        // Lifecycle Entrypoint
+        window.addEventListener('DOMContentLoaded', () => {
+            initializeDatabase();
+            checkSessionState();
+            
+            // Register Keyboard handlers on main layout queries
+            document.getElementById('custName').addEventListener('keydown', handleCustomerSearchKeyboard);
+            document.getElementById('prodSearch').addEventListener('keydown', handleProductSearchKeyboard);
+            
+            // Hide Suggestions on outside click
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('#custName') && !e.target.closest('#custSuggestions')) {
+                    hideSuggestions('cust');
+                }
+                if (!e.target.closest('#prodSearch') && !e.target.closest('#itemSuggestions')) {
+                    hideSuggestions('prod');
+                }
+            });
+
+            // Prevent normal forms submit bubbling
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            document.getElementById('productForm').addEventListener('submit', handleProductSave);
+
+            // Configure billing default structures:
+            addEmptyBillingRow();
+        });
+
+        // -------------------------------------------------------------------------
+        // DATABASE PERSISTENCE ENGINE
+        // -------------------------------------------------------------------------
+        function initializeDatabase() {
+            // Load inventory catalogue
+            const savedProds = localStorage.getItem('malar_products');
+            if (savedProds) {
+                products = JSON.parse(savedProds);
+            } else {
+                products = [...DEFAULT_CATALOGUE];
+                saveToLocalStorage('malar_products', products);
+            }
+
+            // Load registered customers mapping
+            const savedCusts = localStorage.getItem('malar_customers');
+            if (savedCusts) {
+                customers = JSON.parse(savedCusts);
+            } else {
+                customers = ["Suresh Kumar", "Ramesh TVS", "Vijay Balaji", "Hariharan Bullet"];
+                saveToLocalStorage('malar_customers', customers);
+            }
+
+            // Load Invoices Register
+            const savedInvoices = localStorage.getItem('malar_invoices');
+            if (savedInvoices) {
+                invoices = JSON.parse(savedInvoices);
+            }
+
+            // Load Recycle Bin
+            const savedBin = localStorage.getItem('malar_recycle_bin');
+            if (savedBin) {
+                recycleBin = JSON.parse(savedBin);
+            }
+
+            // Load Serial Generator
+            const savedSerial = localStorage.getItem('malar_next_invoice_no');
+            if (savedSerial) {
+                nextInvoiceNo = parseInt(savedSerial);
+            } else {
+                nextInvoiceNo = 1001;
+                saveToLocalStorage('malar_next_invoice_no', nextInvoiceNo);
+            }
+
+            // Update next sequence input value
+            document.getElementById('billInvoiceNum').value = nextInvoiceNo;
+            document.getElementById('cfgNextInvoiceNo').value = nextInvoiceNo;
+
+            // Set current calendar date input
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('billDate').value = today;
+
+            updateReportStats();
+        }
+
+        function saveToLocalStorage(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+        }
+
+        function checkSessionState() {
+            const activeSessionUser = localStorage.getItem('malar_active_user');
+            if (activeSessionUser && USERS[activeSessionUser]) {
+                currentUser = activeSessionUser;
+                showMainLayout();
+            } else {
+                showLoginLayout();
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // USER AUTHENTICATION & LOGIN STATE CONTROL
+        // -------------------------------------------------------------------------
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUser').value;
+            const pass = document.getElementById('loginPassword').value;
+            const errorLabel = document.getElementById('loginError');
+
+            if (USERS[username] && USERS[username].password === pass) {
+                errorLabel.classList.add('hidden');
+                currentUser = username;
+                localStorage.setItem('malar_active_user', username);
+                document.getElementById('loginPassword').value = '';
+                showMainLayout();
+                logActivity(`Logged in user: ${USERS[username].name}`);
+            } else {
+                errorLabel.classList.remove('hidden');
+            }
+        }
+
+        function logout() {
+            logActivity(`Logged out active profile: ${currentUser}`);
+            currentUser = null;
+            localStorage.removeItem('malar_active_user');
+            showLoginLayout();
+        }
+
+        function showLoginLayout() {
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('mainDashboard').classList.add('hidden');
+        }
+
+        function showMainLayout() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainDashboard').classList.remove('hidden');
+            document.getElementById('currentUserDisplay').innerText = USERS[currentUser].name;
+            
+            // Dynamic display based on user logs: HIDES the user profile settings if staff, allows Admin Vijay to view all setting parameters
+            if (USERS[currentUser].role === 'admin') {
+                document.getElementById('tabBtn-settings').classList.remove('hidden');
+            } else {
+                document.getElementById('tabBtn-settings').classList.add('hidden');
+            }
+
+            updateReportStats();
+            renderSavedInvoicesState();
+            renderInventoryTableState();
+            switchTab('billing');
+        }
+
+        // Helper to output workspace ticker updates
+        function logActivity(text) {
+            const ticker = document.getElementById('activityTicker');
+            if (ticker) {
+                const time = new Date().toLocaleTimeString();
+                ticker.innerText = `[${time}] ${text}`;
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // NAVIGATION SYSTEM
+        // -------------------------------------------------------------------------
+        function switchTab(tabId) {
+            activeTab = tabId;
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-amber-500', 'text-slate-950');
+                btn.classList.add('text-slate-400');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tabBtn-${tabId}`);
+            activeBtn.classList.remove('text-slate-400');
+            activeBtn.classList.add('bg-amber-500', 'text-slate-950');
+
+            logActivity(`Navigated to folder tag option: ${tabId.toUpperCase()}`);
+            
+            // Live update statistics of variables automatically
+            updateReportStats();
+            if (tabId === 'invoices') {
+                renderSavedInvoicesState();
+            } else if (tabId === 'products') {
+                renderInventoryTableState();
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // AUTOSUGGEST / AUTOCOMPLETE ENGINES WITH KEYBOARD NAVIGATION
+        // -------------------------------------------------------------------------
+        
+        // Hide popup list helper
+        function hideSuggestions(type) {
+            const containerId = type === 'cust' ? 'custSuggestions' : 'itemSuggestions';
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            container.classList.add('hidden');
+            keyboardSelectedIndex = -1;
+        }
+
+        // --- Custom item Arrow keys + Autocomplete handling for CUSTOMERS ---
+        document.getElementById('custName').addEventListener('input', (e) => {
+            const query = e.target.value.trim().toLowerCase();
+            const suggestionsElement = document.getElementById('custSuggestions');
+            
+            if (!query) {
+                hideSuggestions('cust');
+                return;
+            }
+
+            // Query in system register mapping
+            const matched = customers.filter(c => c.toLowerCase().includes(query));
+            
+            if (matched.length === 0) {
+                hideSuggestions('cust');
+                return;
+            }
+
+            currentSuggestionsList = matched;
+            focusedSearchField = 'cust';
+            keyboardSelectedIndex = -1;
+
+            suggestionsElement.innerHTML = '';
+            suggestionsElement.classList.remove('hidden');
+
+            matched.forEach((name, i) => {
+                const row = document.createElement('div');
+                row.className = `px-4 py-2.5 hover:bg-amber-500 hover:text-slate-950 text-xs font-semibold text-slate-350 cursor-pointer transition border-b border-slate-800/50 last:border-0`;
+                row.innerText = name;
+                row.id = `cust-sugg-idx-${i}`;
+                row.onclick = () => selectCustomerName(name);
+                suggestionsElement.appendChild(row);
+            });
+        });
+
+        function handleCustomerSearchKeyboard(e) {
+            const listContainer = document.getElementById('custSuggestions');
+            if (listContainer.classList.contains('hidden') || currentSuggestionsList.length === 0) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                keyboardSelectedIndex = (keyboardSelectedIndex + 1) % currentSuggestionsList.length;
+                highlightSuggestionsActive('cust');
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                keyboardSelectedIndex = (keyboardSelectedIndex - 1 + currentSuggestionsList.length) % currentSuggestionsList.length;
+                highlightSuggestionsActive('cust');
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (keyboardSelectedIndex >= 0 && keyboardSelectedIndex < currentSuggestionsList.length) {
+                    selectCustomerName(currentSuggestionsList[keyboardSelectedIndex]);
+                }
+            } else if (e.key === 'Escape') {
+                hideSuggestions('cust');
+            }
+        }
+
+        function selectCustomerName(name) {
+            document.getElementById('custName').value = name;
+            hideSuggestions('cust');
+            logActivity(`Loaded registered customer selection: ${name}`);
+        }
+
+        // --- Keyboard arrow navigation for SPARE PARTS ---
+        document.getElementById('prodSearch').addEventListener('input', (e) => {
+            const query = e.target.value.trim().toLowerCase();
+            const suggestionsElement = document.getElementById('itemSuggestions');
+            
+            if (!query) {
+                hideSuggestions('prod');
+                return;
+            }
+
+            const matched = products.filter(p => p.name.toLowerCase().includes(query));
+            
+            if (matched.length === 0) {
+                // If nothing matched, allow click or escape of tag list
+                suggestionsElement.innerHTML = `<div class="px-4 py-3 text-xs italic text-slate-500">No matching spare part in system inventory. Pre-order needed.</div>`;
+                suggestionsElement.classList.remove('hidden');
+                currentSuggestionsList = [];
+                focusedSearchField = 'prod';
+                return;
+            }
+
+            currentSuggestionsList = matched;
+            focusedSearchField = 'prod';
+            keyboardSelectedIndex = -1;
+
+            suggestionsElement.innerHTML = '';
+            suggestionsElement.classList.remove('hidden');
+
+            matched.forEach((product, i) => {
+                const row = document.createElement('div');
+                row.className = `px-4 py-2 hover:bg-indigo-600 hover:text-white text-xs text-slate-300 cursor-pointer transition flex items-center justify-between border-b border-slate-800/40 last:border-0`;
+                row.id = `prod-sugg-idx-${i}`;
+                row.innerHTML = `
+                    <span class="font-bold text-white"><i class="fa-solid fa-gear text-slate-500 text-[10px] mr-1.5"></i>${product.name}</span>
+                    <span class="font-mono text-[11px] text-amber-500 font-semibold bg-slate-950 px-2 py-0.5 rounded">₹${product.price} (Stock: ${product.stock})</span>
+                `;
+                row.onclick = () => selectProductItem(product);
+                suggestionsElement.appendChild(row);
+            });
+        });
+
+        function handleProductSearchKeyboard(e) {
+            const listContainer = document.getElementById('itemSuggestions');
+            if (listContainer.classList.contains('hidden') || currentSuggestionsList.length === 0) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                keyboardSelectedIndex = (keyboardSelectedIndex + 1) % currentSuggestionsList.length;
+                highlightSuggestionsActive('prod');
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                keyboardSelectedIndex = (keyboardSelectedIndex - 1 + currentSuggestionsList.length) % currentSuggestionsList.length;
+                highlightSuggestionsActive('prod');
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (keyboardSelectedIndex >= 0 && keyboardSelectedIndex < currentSuggestionsList.length) {
+                    selectProductItem(currentSuggestionsList[keyboardSelectedIndex]);
+                }
+            } else if (e.key === 'Escape') {
+                hideSuggestions('prod');
+            }
+        }
+
+        // Highlight suggestions on UI
+        function highlightSuggestionsActive(type) {
+            const prefix = type === 'cust' ? 'cust-sugg-idx-' : 'prod-sugg-idx-';
+            // Remove active style from all
+            for (let i = 0; i < currentSuggestionsList.length; i++) {
+                const el = document.getElementById(`${prefix}${i}`);
+                if (el) {
+                    el.classList.remove('bg-indigo-600', 'bg-amber-500', 'text-white', 'text-slate-950');
+                    if (type === 'cust') {
+                        el.className = "px-4 py-2.5 hover:bg-amber-500 hover:text-slate-950 text-xs font-semibold text-slate-350 cursor-pointer transition border-b border-slate-800/50 last:border-0";
+                    } else {
+                        el.className = "px-4 py-2 hover:bg-indigo-600 hover:text-white text-xs text-slate-300 cursor-pointer transition flex items-center justify-between border-b border-slate-800/40 last:border-0";
+                    }
+                }
+            }
+
+            // Set current highlights
+            const targetEl = document.getElementById(`${prefix}${keyboardSelectedIndex}`);
+            if (targetEl) {
+                targetEl.scrollIntoView({ block: 'nearest' });
+                if (type === 'cust') {
+                    targetEl.className = "px-4 py-2.5 bg-amber-500 text-slate-950 text-xs font-semibold cursor-pointer transition border-b border-slate-800/50 last:border-0";
+                } else {
+                    targetEl.className = "px-4 py-2 bg-indigo-600 text-white text-xs cursor-pointer transition flex items-center justify-between border-b border-slate-800/40 last:border-0";
+                }
+            }
+        }
+
+        function selectProductItem(product) {
+            // Append a row or fill the current last blank line with search value
+            let emptyIdx = activeBillingLines.findIndex(ln => !ln.name && ln.price === 0);
+            
+            if (emptyIdx !== -1) {
+                activeBillingLines[emptyIdx] = {
+                    name: product.name,
+                    price: product.price,
+                    qty: 1
+                };
+            } else {
+                activeBillingLines.push({
+                    name: product.name,
+                    price: product.price,
+                    qty: 1
+                });
+            }
+
+            document.getElementById('prodSearch').value = '';
+            hideSuggestions('prod');
+            renderBillingTable();
+            calculateTotals();
+            logActivity(`Selected spare to invoice lines: ${product.name}`);
+        }
+
+        // -------------------------------------------------------------------------
+        // DYNAMIC VEHICLE BILLING TABLE & CONTROLS
+        // -------------------------------------------------------------------------
+        function addEmptyBillingRow() {
+            activeBillingLines.push({
+                name: '',
+                price: 0,
+                qty: 1
+            });
+            renderBillingTable();
+        }
+
+        function removeBillingRow(idx) {
+            activeBillingLines.splice(idx, 1);
+            if (activeBillingLines.length === 0) {
+                addEmptyBillingRow();
+            } else {
+                renderBillingTable();
+                calculateTotals();
+            }
+        }
+
+        function updateBillingLine(idx, field, value) {
+            if (field === 'price') {
+                activeBillingLines[idx].price = parseFloat(value) || 0;
+            } else if (field === 'qty') {
+                activeBillingLines[idx].qty = parseInt(value) || 0;
+            } else if (field === 'name') {
+                activeBillingLines[idx].name = value;
+            }
+            
+            calculateTotals();
+        }
+
+        // Render live active table inputs
+        function renderBillingTable() {
+            const container = document.getElementById('billingTableBody');
+            container.innerHTML = '';
+
+            activeBillingLines.forEach((line, i) => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-800 hover:bg-slate-900/30 transition";
+                tr.innerHTML = `
+                    <td class="px-3 py-2 text-center text-xs font-semibold text-slate-500">${i + 1}</td>
+                    <td class="px-3 py-2">
+                        <input type="text" value="${line.name}" oninput="updateBillingLine(${i}, 'name', this.value)" placeholder="Enter customized job job or spare part name" class="w-full bg-slate-950 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-indigo-500">
+                    </td>
+                    <td class="px-3 py-2">
+                        <input type="number" step="any" min="0" value="${line.price === 0 ? '' : line.price}" oninput="updateBillingLine(${i}, 'price', this.value)" placeholder="Price" class="w-full bg-slate-950 border border-slate-800 rounded px-2 py-1.5 text-xs text-right text-white font-mono focus:outline-none focus:border-indigo-500">
+                    </td>
+                    <td class="px-3 py-2">
+                        <input type="number" min="1" value="${line.qty}" oninput="updateBillingLine(${i}, 'qty', this.value)" onkeydown="checkTableKeypress(event, ${i})" placeholder="1" class="w-full bg-slate-950 border border-slate-800 rounded px-2 py-1.5 text-xs text-right text-white font-mono focus:outline-none focus:border-indigo-500">
+                    </td>
+                    <td class="px-3 py-2 text-right font-mono font-bold text-slate-300 text-xs">
+                        ₹${(line.price * line.qty).toFixed(2)}
+                    </td>
+                    <td class="px-3 py-2 text-center">
+                        <button onclick="removeBillingRow(${i})" class="text-xs text-red-500 hover:text-red-400 p-1 bg-red-500/10 hover:bg-red-500/20 rounded border border-red-500/20 transition">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                `;
+                container.appendChild(tr);
+            });
+        }
+
+        // Trigger on "Enter" inside row table input fields keypress
+        function checkTableKeypress(e, index) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addEmptyBillingRow();
+                logActivity(`Action triggered: New billing line added via Keyboard Enter execution.`);
+                // Set focus to the new item details input field automatically if rendered
+                setTimeout(() => {
+                    const inputs = document.querySelectorAll('#billingTableBody tr');
+                    if (inputs.length > index + 1) {
+                        const targetInput = inputs[index + 1].querySelector('input');
+                        if (targetInput) targetInput.focus();
+                    }
+                }, 50);
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // FINANCIAL ARITHMETIC & QR ENCODING
+        // -------------------------------------------------------------------------
+        function calculateTotals() {
+            let subtotal = 0;
+            activeBillingLines.forEach(ln => {
+                subtotal += (ln.price * ln.qty);
+            });
+
+            const gstPercent = parseFloat(document.getElementById('billGstPercent').value) || 0;
+            const advance = parseFloat(document.getElementById('billAdvance').value) || 0;
+
+            const gstAmt = subtotal * (gstPercent / 100);
+            const grandTotal = subtotal + gstAmt;
+            const balanceDue = Math.max(0, grandTotal - advance);
+
+            // Set Form display outcomes
+            document.getElementById('billGrandTotalText').innerText = subtotal.toFixed(2);
+            document.getElementById('summarySubtotal').innerText = subtotal.toFixed(2);
+            
+            document.getElementById('summaryGstLabel').innerText = `GST (${gstPercent}%)`;
+            document.getElementById('summaryGstAmount').innerText = gstAmt.toFixed(2);
+            document.getElementById('summaryGrandTotal').innerText = grandTotal.toFixed(2);
+            document.getElementById('summaryAdvance').innerText = advance.toFixed(2);
+            document.getElementById('summaryBalance').innerText = balanceDue.toFixed(2);
+
+            // Re-render QR code dynamically pointing strictly to balance due amount
+            generatePaymentQRCode(balanceDue);
+        }
+
+        // Generate Automatic QR Payment Scan block
+        function generatePaymentQRCode(amount) {
+            const qrTitle = document.getElementById('billQrTitle').value || 'Malar Garage Cashier';
+            document.getElementById('paymentQrTitle').innerText = qrTitle.toUpperCase();
+            document.getElementById('qrBalanceVal').innerText = amount.toFixed(2);
+
+            // Standard UPI Payment specifications QR mapping parameters
+            // upi://pay?pa=malarautogarage@ybl&pn=Malar%20Auto%20Garage&am=AMOUNT&cu=INR
+            const encodedMerchant = encodeURIComponent('Malar Auto Garage');
+            const upiUrl = `upi://pay?pa=malarautogarage@ybl&pn=${encodedMerchant}&am=${amount.toFixed(2)}&cu=INR&tn=InvoicePayment`;
+            
+            // Render inside printable preview block QR frame simultaneously
+            const apiQrLink = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(upiUrl)}`;
+            
+            // Set visuals
+            document.getElementById('qrCodeImg').src = apiQrLink;
+            document.getElementById('prtQrCodeImg').src = apiQrLink;
+            document.getElementById('prtQrBalanceVal').innerText = amount.toFixed(2);
+            document.getElementById('prtPaymentTitle').innerText = qrTitle.toUpperCase();
+        }
+
+        // Show/Hide customer full address textbox
+        function toggleAddressField() {
+            const cont = document.getElementById('addressContainer');
+            const btn = document.getElementById('btnToggleAddress');
+            if (cont.classList.contains('hidden')) {
+                cont.classList.remove('hidden');
+                btn.innerHTML = `<i class="fa-solid fa-minus-circle"></i> Hide Address`;
+            } else {
+                cont.classList.add('hidden');
+                // clear
+                document.getElementById('custAddress').value = '';
+                btn.innerHTML = `<i class="fa-solid fa-plus-circle"></i> Add Address (Optional)`;
+            }
+        }
+
+        // Photo loading and attachments
+        function handleBillPhotoUpload(e) {
+            const file = e.target.files[0];
+            const status = document.getElementById('billPhotoStatus');
+            const previewContainer = document.getElementById('billPhotoPreviewContainer');
+            const imgPreview = document.getElementById('billPhotoPreview');
+
+            if (!file) return;
+
+            status.innerText = file.name;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                currentAttachedPhoto = evt.target.result;
+                imgPreview.src = currentAttachedPhoto;
+                previewContainer.classList.remove('hidden');
+                logActivity(`Photo annexed into active invoice successfully: ${file.name}`);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function removeAttachedPhoto() {
+            currentAttachedPhoto = null;
+            document.getElementById('billPhotoStatus').innerText = 'No image file chosen';
+            document.getElementById('billPhotoUpload').value = '';
+            document.getElementById('billPhotoPreviewContainer').classList.add('hidden');
+            logActivity(`Annexed invoice photo detached.`);
+        }
+
+        // -------------------------------------------------------------------------
+        // SAVE & PERSISTENCE PROCESSES
+        // -------------------------------------------------------------------------
+        function saveInvoice() {
+            // Build Invoice details payload
+            const rawInvoiceNoVal = document.getElementById('billInvoiceNum').value.trim();
+            const invoiceNo = rawInvoiceNoVal ? rawInvoiceNoVal : nextInvoiceNo.toString();
+
+            // Check if active items contain anything valid
+            const validLines = activeBillingLines.filter(ln => ln.name.trim() !== '');
+            if (validLines.length === 0) {
+                alert("Please declare at least one bike spare part or service description on the receipt table before writing files!");
+                return;
+            }
+
+            let clientNameValue = document.getElementById('custName').value.trim();
+            if (!clientNameValue) {
+                clientNameValue = "Walk-in customer";
+            }
+
+            const clientPhone = document.getElementById('custPhone').value.trim();
+            const clientAddress = document.getElementById('custAddress').value.trim();
+            const bikeLicenseNo = document.getElementById('custVehicle').value.trim();
+            const gstNo = document.getElementById('billGstNumber').value.trim();
+            
+            // Calculations aggregation
+            let subtotal = 0;
+            validLines.forEach(ln => subtotal += (ln.price * ln.qty));
+
+            const gstPercent = parseFloat(document.getElementById('billGstPercent').value) || 0;
+            const gstAmount = subtotal * (gstPercent / 100);
+            const grandTotal = subtotal + gstAmount;
+            const advancePaid = parseFloat(document.getElementById('billAdvance').value) || 0;
+            const outstandingBalance = Math.max(0, grandTotal - advancePaid);
+
+            // Construct new entry object
+            const newInvoiceObj = {
+                invoiceNumber: invoiceNo,
+                date: document.getElementById('billDate').value,
+                customerName: clientNameValue,
+                phone: clientPhone,
+                address: clientAddress,
+                vehicleNumber: bikeLicenseNo,
+                gstNumber: gstNo,
+                items: validLines,
+                subtotal: subtotal,
+                gstPercentage: gstPercent,
+                gstAmount: gstAmount,
+                grandTotal: grandTotal,
+                advancePaid: advancePaid,
+                balanceDue: outstandingBalance,
+                annexPhoto: currentAttachedPhoto,
+                status: outstandingBalance > 0 ? 'Pending' : 'Received',
+                loggedBy: USERS[currentUser]?.name || 'Mechanic Staff'
+            };
+
+            // Check duplicate invoices (allows overwriting / editing saved invoices)
+            const duplicateIdx = invoices.findIndex(inv => inv.invoiceNumber === invoiceNo);
+            if (duplicateIdx !== -1) {
+                // Confirm update
+                const ok = confirm(`An invoice listing with serial identifier #${invoiceNo} already exists in the system registry database. Do you want to overwrite it with these modifications?`);
+                if (!ok) return;
+                invoices[duplicateIdx] = newInvoiceObj;
+                logActivity(`Invoice overridden/modified: Serial #${invoiceNo}`);
+            } else {
+                // Save new record
+                invoices.push(newInvoiceObj);
+                logActivity(`New invoice successfully created: Serial #${invoiceNo}`);
+                
+                // Track customer in register
+                if (clientNameValue && clientNameValue !== "Walk-in customer" && !customers.includes(clientNameValue)) {
+                    customers.push(clientNameValue);
+                    saveToLocalStorage('malar_customers', customers);
+                }
+
+                // Increment Sequence Point automatically
+                const nextVal = parseInt(invoiceNo) + 1;
+                if (!isNaN(nextVal)) {
+                    nextInvoiceNo = nextVal;
+                    saveToLocalStorage('malar_next_invoice_no', nextInvoiceNo);
+                    document.getElementById('billInvoiceNum').value = nextInvoiceNo;
+                    document.getElementById('cfgNextInvoiceNo').value = nextInvoiceNo;
+                }
+            }
+
+            // Save database, refresh views, redirect to saved tag frame
+            saveToLocalStorage('malar_invoices', invoices);
+            resetBill();
+            updateReportStats();
+            switchTab('invoices');
+        }
+
+        function resetBill() {
+            // Re-acquire fresh serial value
+            document.getElementById('billInvoiceNum').value = nextInvoiceNo;
+            
+            // Clean inputs
+            document.getElementById('custName').value = '';
+            document.getElementById('custPhone').value = '';
+            document.getElementById('custVehicle').value = '';
+            document.getElementById('custAddress').value = '';
+            document.getElementById('billAdvance').value = 0;
+            document.getElementById('billGstPercent').value = 0; // default zero setup
+
+            // Reset lines
+            activeBillingLines = [];
+            currentAttachedPhoto = null;
+            removeAttachedPhoto();
+            addEmptyBillingRow();
+            calculateTotals();
+        }
+
+        // -------------------------------------------------------------------------
+        // REPORTING & RECENT LOGS SUMMARY CONTROLLERS
+        // -------------------------------------------------------------------------
+        function updateReportStats() {
+            // General counters updater
+            const activeCount = invoices.length;
+            document.getElementById('statTotalInvoices').innerText = activeCount;
+
+            // Calculate pending outstanding amounts
+            let outstandingAmtSum = 0;
+            let pendingCustomersCount = 0;
+
+            invoices.forEach(inv => {
+                if (inv.status === 'Pending' && inv.balanceDue > 0) {
+                    outstandingAmtSum += inv.balanceDue;
+                    pendingCustomersCount++;
+                }
+            });
+
+            document.getElementById('statPendingCount').innerText = `${pendingCustomersCount} customer${pendingCustomersCount !== 1 ? 's' : ''}`;
+            document.getElementById('statPendingAmt').innerText = `₹${outstandingAmtSum.toFixed(2)}`;
+        }
+
+        // -------------------------------------------------------------------------
+        // INVOICES REGISTRY OPERATIONS (EDIT, PAYMENTS STATUS, TRASHCAN)
+        // -------------------------------------------------------------------------
+        function renderSavedInvoicesState() {
+            const container = document.getElementById('invoicesTableBody');
+            container.innerHTML = '';
+
+            const searchTerm = document.getElementById('invoiceSearchText').value.trim().toLowerCase();
+
+            // Apply filter if input exists
+            let filtered = invoices.filter(inv => {
+                return inv.invoiceNumber.toLowerCase().includes(searchTerm) || 
+                       inv.customerName.toLowerCase().includes(searchTerm) || 
+                       inv.vehicleNumber.toLowerCase().includes(searchTerm) ||
+                       inv.phone.includes(searchTerm);
+            });
+
+            // Sort standard: Ascending / Descending toggle
+            if (invoiceSortAsc) {
+                filtered.sort((a, b) => parseInt(a.invoiceNumber) - parseInt(b.invoiceNumber));
+            } else {
+                filtered.sort((a, b) => parseInt(b.invoiceNumber) - parseInt(a.invoiceNumber));
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="text-center py-8 text-slate-500 font-medium">No invoice records found matching criteria.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filtered.forEach(inv => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-800 hover:bg-slate-900/20 text-xs transition";
+                
+                const statusBadge = inv.status === 'Received' 
+                    ? `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold uppercase tracking-wider text-[10px]">Received</span>` 
+                    : `<span class="bg-amber-505 bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2 py-0.5 rounded font-bold uppercase tracking-wider text-[10px]">Not Received</span>`;
+
+                tr.innerHTML = `
+                    <td class="px-4 py-3 font-semibold text-white text-center mono-font">#${inv.invoiceNumber}</td>
+                    <td class="px-4 py-3 text-slate-400">${inv.date}</td>
+                    <td class="px-4 py-3">
+                        <div class="font-bold text-white">${inv.customerName}</div>
+                        <div class="text-[10px] text-slate-500">${inv.phone ? inv.phone : 'No Phone'}</div>
+                    </td>
+                    <td class="px-4 py-3 font-semibold text-slate-300 uppercase">${inv.vehicleNumber ? inv.vehicleNumber : 'N/A'}</td>
+                    <td class="px-4 py-3 text-right text-slate-300 font-mono font-medium">₹${inv.grandTotal.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-right text-slate-400 font-mono">₹${inv.advancePaid.toFixed(2)}</td>
+                    <td class="px-4 py-3 text-right text-amber-500 font-mono font-bold">
+                        <span onclick="promptEditInvoiceBalance('${inv.invoiceNumber}')" class="cursor-pointer hover:underline">₹${inv.balanceDue.toFixed(2)} <i class="fa-solid fa-pen text-[9px] ml-0.5 text-slate-500"></i></span>
+                    </td>
+                    <td class="px-4 py-3 text-center">${statusBadge}</td>
+                    <td class="px-4 py-3 text-center">
+                        <div class="flex items-center justify-center gap-1.5">
+                            <button onclick="previewInvoiceDetails('${inv.invoiceNumber}')" title="Preview bill printout" class="p-1 px-1.5 bg-indigo-500/10 hover:bg-indigo-600/20 text-indigo-400 rounded border border-indigo-500/20 transition">
+                                <i class="fa-solid fa-eye text-xs"></i>
+                            </button>
+                            <button onclick="loadInvoiceToEditForm('${inv.invoiceNumber}')" title="Modify Billing Form" class="p-1 px-1.5 bg-amber-500/10 hover:bg-amber-600/20 text-amber-400 rounded border border-amber-500/20 transition">
+                                <i class="fa-solid fa-user-pen text-xs"></i>
+                            </button>
+                            ${inv.status === 'Pending' ? `
+                                <button onclick="markInvoiceAsReceived('${inv.invoiceNumber}')" title="Mark Outstanding Balance Received" class="p-1 px-1.5 bg-emerald-500/10 hover:bg-emerald-600/20 text-emerald-400 rounded border border-emerald-500/20 transition">
+                                    <i class="fa-solid fa-circle-check text-xs"></i>
+                                </button>
+                            ` : `
+                                <button onclick="undoOutstandingReceived('${inv.invoiceNumber}')" title="Set Status as Outstanding Balance" class="p-1 px-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 transition">
+                                    <i class="fa-solid fa-rotate-left text-xs"></i>
+                                </button>
+                            `}
+                            <button onclick="moveInvoiceToTrash('${inv.invoiceNumber}')" title="Trash bin folder" class="p-1 px-1.5 bg-red-500/10 hover:bg-red-600/20 text-red-400 rounded border border-red-500/20 transition">
+                                <i class="fa-solid fa-trash text-xs"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                container.appendChild(tr);
+            });
+        }
+
+        function toggleInvoiceSortOrder() {
+            invoiceSortAsc = !invoiceSortAsc;
+            renderSavedInvoicesState();
+            logActivity(`Sorted Invoices display order rearranged ${invoiceSortAsc ? 'Ascending' : 'Descending'}.`);
+        }
+
+        // Live Change Payment Outstanding balance
+        function promptEditInvoiceBalance(invoiceNum) {
+            const idx = invoices.findIndex(i => i.invoiceNumber === invoiceNum);
+            if (idx === -1) return;
+
+            const inv = invoices[idx];
+            const newVal = prompt(`Update Outstanding Balance Due for custom Invoice #${invoiceNum} (Current Due: ₹${inv.balanceDue.toFixed(2)}):`, inv.balanceDue);
+            if (newVal === null) return;
+
+            const parsedVal = parseFloat(newVal);
+            if (isNaN(parsedVal) || parsedVal < 0) {
+                alert("Please establish a valid positive balance amount.");
+                return;
+            }
+
+            inv.balanceDue = parsedVal;
+            inv.status = parsedVal === 0 ? 'Received' : 'Pending';
+            
+            saveToLocalStorage('malar_invoices', invoices);
+            renderSavedInvoicesState();
+            updateReportStats();
+            logActivity(`Invoice #${invoiceNum} balance modified statically to ₹${parsedVal.toFixed(2)}`);
+        }
+
+        function markInvoiceAsReceived(invoiceNo) {
+            const idx = invoices.findIndex(inv => inv.invoiceNumber === invoiceNo);
+            if (idx === -1) return;
+
+            invoices[idx].status = 'Received';
+            invoices[idx].balanceDue = 0; // payment fully completed
+            
+            saveToLocalStorage('malar_invoices', invoices);
+            renderSavedInvoicesState();
+            updateReportStats();
+            logActivity(`Payment received in full for Invoice #${invoiceNo}. Saved.`);
+        }
+
+        function undoOutstandingReceived(invoiceNo) {
+            const idx = invoices.findIndex(inv => inv.invoiceNumber === invoiceNo);
+            if (idx === -1) return;
+
+            invoices[idx].status = 'Pending';
+            // Set balance back equal to grand total base as default reference
+            invoices[idx].balanceDue = invoices[idx].grandTotal - invoices[idx].advancePaid;
+
+            saveToLocalStorage('malar_invoices', invoices);
+            renderSavedInvoicesState();
+            updateReportStats();
+            logActivity(`Rollback: Invoice #${invoiceNo} Outstanding setup marked.`);
+        }
+
+        function loadInvoiceToEditForm(invoiceNo) {
+            const idx = invoices.findIndex(inv => inv.invoiceNumber === invoiceNo);
+            if (idx === -1) return;
+
+            const targetSource = invoices[idx];
+            
+            // Pop fields of edit configuration
+            document.getElementById('billInvoiceNum').value = targetSource.invoiceNumber;
+            document.getElementById('billDate').value = targetSource.date;
+            document.getElementById('custName').value = targetSource.customerName === "Walk-in customer" ? "" : targetSource.customerName;
+            document.getElementById('custPhone').value = targetSource.phone;
+            document.getElementById('custVehicle').value = targetSource.vehicleNumber;
+            document.getElementById('billGstNumber').value = targetSource.gstNumber || 'GSTIN-33MALAR2026B';
+            document.getElementById('billGstPercent').value = targetSource.gstPercentage;
+            document.getElementById('billAdvance').value = targetSource.advancePaid;
+
+            if (targetSource.address) {
+                document.getElementById('addressContainer').classList.remove('hidden');
+                document.getElementById('custAddress').value = targetSource.address;
+                document.getElementById('btnToggleAddress').innerHTML = `<i class="fa-solid fa-minus-circle"></i> Hide Address`;
+            } else {
+                document.getElementById('addressContainer').classList.add('hidden');
+                document.getElementById('custAddress').value = '';
+                document.getElementById('btnToggleAddress').innerHTML = `<i class="fa-solid fa-plus-circle"></i> Add Address (Optional)`;
+            }
+
+            // Restore active table rows
+            activeBillingLines = targetSource.items.map(it => ({
+                name: it.name,
+                price: it.price,
+                qty: it.qty
+            }));
+
+            // Image annex restore
+            if (targetSource.annexPhoto) {
+                currentAttachedPhoto = targetSource.annexPhoto;
+                document.getElementById('billPhotoPreview').src = currentAttachedPhoto;
+                document.getElementById('billPhotoPreviewContainer').classList.remove('hidden');
+                document.getElementById('billPhotoStatus').innerText = "Uploaded attached Image link";
+            } else {
+                removeAttachedPhoto();
+            }
+
+            renderBillingTable();
+            calculateTotals();
+            switchTab('billing');
+            logActivity(`Loaded saved invoice #${invoiceNo} back to active editor for updating.`);
+        }
+
+        // -------------------------------------------------------------------------
+        // RECYCLE TRASH BIN ENGINE (30 DAYS POLICY WARNING)
+        // -------------------------------------------------------------------------
+        function moveInvoiceToTrash(invoiceNo) {
+            const idx = invoices.findIndex(inv => inv.invoiceNumber === invoiceNo);
+            if (idx === -1) return;
+
+            const ok = confirm(`Are you sure you want to delete Invoice Record #${invoiceNo}? This action will temporarily send it to the recycle bin.`);
+            if (!ok) return;
+
+            const deletedInvoice = invoices.splice(idx, 1)[0];
+            deletedInvoice.deletedTimestamp = new Date().getTime(); // timestamp for validation checks
+            
+            recycleBin.push(deletedInvoice);
+
+            saveToLocalStorage('malar_invoices', invoices);
+            saveToLocalStorage('malar_recycle_bin', recycleBin);
+
+            renderSavedInvoicesState();
+            updateReportStats();
+            logActivity(`Deleted invoice #${invoiceNo} moved to active Recycle Bin.`);
+        }
+
+        function openRecycleBinModal() {
+            document.getElementById('recycleBinModal').classList.remove('hidden');
+            renderRecycleBinContents();
+        }
+
+        function closeRecycleBinModal() {
+            document.getElementById('recycleBinModal').classList.add('hidden');
+        }
+
+        function renderRecycleBinContents() {
+            const container = document.getElementById('binTableBody');
+            container.innerHTML = '';
+
+            if (recycleBin.length === 0) {
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-6 text-slate-600 italic">Trash Cache folder is completely empty.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            const now = new Date().getTime();
+            const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+
+            recycleBin.forEach((inv, i) => {
+                const deletedDate = new Date(inv.deletedTimestamp).toLocaleDateString();
+                const remainingDays = Math.max(1, Math.ceil((thirtyDaysMs - (now - inv.deletedTimestamp)) / (24 * 60 * 60 * 1000)));
+
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-800 hover:bg-slate-900/10 text-xs";
+                tr.innerHTML = `
+                    <td class="px-4 py-2 text-center text-white mono-font">#${inv.invoiceNumber}</td>
+                    <td class="px-4 py-2">
+                        <div class="font-bold">${inv.customerName}</div>
+                        <div class="text-[9px] text-slate-500">Amt: ₹${inv.grandTotal.toFixed(2)}</div>
+                    </td>
+                    <td class="px-3 py-2 text-right font-mono text-slate-350">₹${inv.grandTotal.toFixed(2)}</td>
+                    <td class="px-3 py-2 text-center text-[10px] text-slate-400">
+                        <div>${deletedDate}</div>
+                        <div class="text-[9px] text-red-400 font-semibold uppercase">Exp: ${remainingDays} days left</div>
+                    </td>
+                    <td class="px-4 py-2 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="restoreFromTrash(${i})" title="Restore record to list" class="px-2 py-1 bg-emerald-600/35 hover:bg-emerald-500 text-white font-bold text-[10px] rounded transition">
+                                Restore
+                            </button>
+                            <button onclick="permanentlyDeleteFromTrash(${i})" title="Purge permanently" class="px-2 py-1 bg-red-950 hover:bg-red-600 text-white font-bold text-[10px] rounded transition">
+                                Purge
+                            </button>
+                        </div>
+                    </td>
+                `;
+                container.appendChild(tr);
+            });
+        }
+
+        function restoreFromTrash(index) {
+            const invoice = recycleBin.splice(index, 1)[0];
+            delete invoice.deletedTimestamp;
+
+            invoices.push(invoice);
+            
+            saveToLocalStorage('malar_invoices', invoices);
+            saveToLocalStorage('malar_recycle_bin', recycleBin);
+
+            renderRecycleBinContents();
+            renderSavedInvoicesState();
+            updateReportStats();
+            logActivity(`Invoice #${invoice.invoiceNumber} restored safely to main register database.`);
+        }
+
+        function permanentlyDeleteFromTrash(index) {
+            const ok = confirm("Permanent Action. Warning: Purging invoice records leaves gaps in physical book ledger sequence numbers. Confirm purge?");
+            if (!ok) return;
+
+            const invoice = recycleBin.splice(index, 1)[0];
+
+            saveToLocalStorage('malar_recycle_bin', recycleBin);
+            renderRecycleBinContents();
+            logActivity(`Receipt Serial #${invoice.invoiceNumber} permanently scrubbed from system memories.`);
+        }
+
+        // -------------------------------------------------------------------------
+        // SPARE PARTS MANAGEMENT (ADD, BULK IMPORT, SEARCH)
+        // -------------------------------------------------------------------------
+        function renderInventoryTableState() {
+            const container = document.getElementById('inventoryTableBody');
+            container.innerHTML = '';
+
+            const searchVal = document.getElementById('inventorySearch').value.trim().toLowerCase();
+            const filteredVal = products.filter(p => p.name.toLowerCase().includes(searchVal));
+
+            document.getElementById('inventoryStatsCount').innerText = products.length;
+
+            if (filteredVal.length === 0) {
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="text-center py-6 text-slate-600">No catalogue items found in workshop records.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filteredVal.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-800 hover:bg-slate-900/10 text-xs text-slate-350 transition";
+                tr.innerHTML = `
+                    <td class="px-4 py-2.5 font-bold text-white">${p.name}</td>
+                    <td class="px-4 py-2.5 text-right font-semibold text-amber-500 font-mono">₹${p.price.toFixed(2)}</td>
+                    <td class="px-4 py-2.5 text-right font-mono">${p.stock}</td>
+                    <td class="px-4 py-2.5 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="editProductInForm('${p.id}')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-[10px] text-amber-400 font-bold border border-slate-700/80 rounded transition">
+                                Edit
+                            </button>
+                            <button onclick="deleteProductFromInventory('${p.id}')" class="px-2 py-1 bg-red-950/40 hover:bg-red-600 text-[10px] text-red-300 hover:text-white rounded transition">
+                                Delete
+                            </button>
+                        </div>
+                    </td>
+                `;
+                container.appendChild(tr);
+            });
+        }
+
+        function handleProductSave(e) {
+            e.preventDefault();
+            const editId = document.getElementById('inventoryEditId').value;
+            const name = document.getElementById('inventoryName').value.trim();
+            const price = parseFloat(document.getElementById('inventoryPrice').value) || 0;
+            const qty = parseInt(document.getElementById('inventoryCount').value) || 0;
+
+            if (editId) {
+                // Update
+                const idx = products.findIndex(p => p.id === editId);
+                if (idx !== -1) {
+                    products[idx] = { id: editId, name, price, stock: qty };
+                    logActivity(`Inventory item modified in record: ${name}`);
+                }
+            } else {
+                // Add new
+                const generatorId = 'p_raw_' + new Date().getTime();
+                products.push({ id: generatorId, name, price, stock: qty });
+                logActivity(`New spare catalog entry compiled: ${name}`);
+            }
+
+            saveToLocalStorage('malar_products', products);
+            cancelInventoryEdit();
+            renderInventoryTableState();
+        }
+
+        function editProductInForm(id) {
+            const matched = products.find(p => p.id === id);
+            if (!matched) return;
+
+            document.getElementById('inventoryFormTitle').innerText = "Modify Catalog Product";
+            document.getElementById('inventoryEditId').value = matched.id;
+            document.getElementById('inventoryName').value = matched.name;
+            document.getElementById('inventoryPrice').value = matched.price;
+            document.getElementById('inventoryCount').value = matched.stock;
+
+            document.getElementById('btnCancelInventoryEdit').classList.remove('hidden');
+        }
+
+        function cancelInventoryEdit() {
+            document.getElementById('inventoryFormTitle').innerText = "Add New Spare Part / Service";
+            document.getElementById('inventoryEditId').value = '';
+            document.getElementById('inventoryName').value = '';
+            document.getElementById('inventoryPrice').value = '';
+            document.getElementById('inventoryCount').value = '';
+
+            document.getElementById('btnCancelInventoryEdit').classList.add('hidden');
+        }
+
+        function deleteProductFromInventory(id) {
+            const matchedIdx = products.findIndex(p => p.id === id);
+            if (matchedIdx === -1) return;
+
+            const name = products[matchedIdx].name;
+            const ok = confirm(`Purge spare reference '${name}' from Malar mechanical log registration?`);
+            if (!ok) return;
+
+            products.splice(matchedIdx, 1);
+            saveToLocalStorage('malar_products', products);
+            renderInventoryTableState();
+            logActivity(`Product wiped: ${name}`);
+        }
+
+        // UNRESTRICTED BULK IMPORT LOGIC
+        function handleBulkImport() {
+            const sourceText = document.getElementById('bulkJsonInput').value.trim();
+            if (!sourceText) {
+                alert("Please declare a raw JSON structured parts mapping list object inside text block prior processing.");
+                return;
+            }
+
+            try {
+                const parsed = JSON.parse(sourceText);
+                if (!Array.isArray(parsed)) {
+                    throw new Error("Bulk list schema payload must be structured as an array matrix.");
+                }
+
+                let processedCount = 0;
+                parsed.forEach(itm => {
+                    if (itm.name) {
+                        const directPrice = parseFloat(itm.price) || 0;
+                        const stockVal = parseInt(itm.stock) || parseInt(itm.quantity) || 5;
+                        const idGen = 'p_bulk_' + Math.random().toString(36).substr(2, 6);
+                        
+                        // Push dynamic
+                        products.push({ id: idGen, name: itm.name, price: directPrice, stock: stockVal });
+                        processedCount++;
+                    }
+                });
+
+                saveToLocalStorage('malar_products', products);
+                renderInventoryTableState();
+                document.getElementById('bulkJsonInput').value = '';
+                logActivity(`Unrestricted bulk inventory upload processed successfully! Appended ${processedCount} spare entries.`);
+                alert(`Successfully imported ${processedCount} new products into Malar Garage inventory catalogue!`);
+            } catch (err) {
+                alert(`Upload failed: JSON structure parsing errors: ${err.message}`);
+            }
+        }
+
+        // -------------------------------------------------------------------------
+        // PRINTING & FULL INTEGRATION GENERATION PREVIEW SCREEN
+        // -------------------------------------------------------------------------
+        function openInstantReceiptPreview() {
+            // Build temporary screen structure preview pointing directly to current workflow draft
+            const valid = activeBillingLines.filter(ln => ln.name.trim() !== '');
+            if (valid.length === 0) {
+                alert("Please declare at least one non-blank invoice line item prior previewing printing document mapping.");
+                return;
+            }
+
+            let clientNameVal = document.getElementById('custName').value.trim();
+            if (!clientNameVal) clientNameVal = "Walk-in customer";
+
+            const payloadDetailsDraft = {
+                invoiceNumber: document.getElementById('billInvoiceNum').value.trim() || nextInvoiceNo.toString(),
+                date: document.getElementById('billDate').value,
+                customerName: clientNameVal,
+                phone: document.getElementById('custPhone').value.trim() || 'No Contact declared',
+                address: document.getElementById('custAddress').value.trim() || 'N/A',
+                vehicleNumber: document.getElementById('custVehicle').value.trim() || 'NOT SPECIFIED',
+                gstNumber: document.getElementById('billGstNumber').value.trim() || 'GSTIN-33MALAR2026B',
+                items: valid,
+                gstPercentage: parseFloat(document.getElementById('billGstPercent').value) || 0,
+                advancePaid: parseFloat(document.getElementById('billAdvance').value) || 0,
+                loggedBy: USERS[currentUser]?.name || 'Mechanic Supervisor'
+            };
+
+            loadAndLaunchBillPreviewMarkup(payloadDetailsDraft);
+        }
+
+        function previewInvoiceDetails(invoiceNo) {
+            const match = invoices.find(inv => inv.invoiceNumber === invoiceNo);
+            if (!match) return;
+            loadAndLaunchBillPreviewMarkup(match);
+        }
+
+        function loadAndLaunchBillPreviewMarkup(inv) {
+            // Calculations compile
+            let subtotal = 0;
+            const tableBody = document.getElementById('prtDetailsTableBody');
+            tableBody.innerHTML = '';
+
+            inv.items.forEach((it, i) => {
+                const lineTotal = it.price * it.qty;
+                subtotal += lineTotal;
+
+                const tr = document.createElement('tr');
+                tr.className = "text-xs border-b border-slate-200 last:border-0";
+                tr.innerHTML = `
+                    <td class="px-4 py-2.5 text-center font-semibold text-slate-500">${i + 1}</td>
+                    <td class="px-4 py-2.5 font-bold text-slate-800">${it.name}</td>
+                    <td class="px-4 py-2.5 text-right font-mono">₹${it.price.toFixed(2)}</td>
+                    <td class="px-4 py-2.5 text-center font-mono">${it.qty}</td>
+                    <td class="px-4 py-2.5 text-right font-mono font-bold text-slate-905">₹${lineTotal.toFixed(2)}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            const gstPercent = inv.gstPercentage;
+            const gstAmount = subtotal * (gstPercent / 100);
+            const grandTotal = subtotal + gstAmount;
+            const balanceVal = Math.max(0, grandTotal - inv.advancePaid);
+
+            // Populate printable labels
+            document.getElementById('prtInvoiceNo').innerText = inv.invoiceNumber;
+            document.getElementById('prtDate').innerText = inv.date;
+            document.getElementById('prtGstNumber').innerText = inv.gstNumber || 'GSTIN-33MALAR2026B';
+            document.getElementById('prtCustomerName').innerText = inv.customerName;
+            document.getElementById('prtCustomerPhone').innerText = inv.phone;
+            document.getElementById('prtCustomerAddress').innerText = inv.address || 'N/A';
+            document.getElementById('prtVehicleNo').innerText = inv.vehicleNumber || 'NOT SPECIFIED';
+            document.getElementById('prtBilledBy').innerText = inv.loggedBy;
+
+            // Financial block sets
+            document.getElementById('prtSubtotal').innerText = subtotal.toFixed(2);
+            document.getElementById('prtGstLabelText').innerText = `GST (${gstPercent}%):`;
+            document.getElementById('prtGstAmt').innerText = gstAmount.toFixed(2);
+            document.getElementById('prtGrandTotal').innerText = grandTotal.toFixed(2);
+            document.getElementById('prtAdvance').innerText = inv.advancePaid.toFixed(2);
+            document.getElementById('prtBalance').innerText = balanceVal.toFixed(2);
+
+            // Trigger QR inside printable frame too
+            generatePaymentQRCode(balanceVal);
+
+            // Toggle element configurations view to block body
+            document.getElementById('billPreviewModal').classList.remove('hidden');
+            logActivity(`Previewing compiled bill for Invoice: #${inv.invoiceNumber}`);
+        }
+
+        function closeInvoicePreview() {
+            document.getElementById('billPreviewModal').classList.add('hidden');
+        }
+
+        function printInvoice() {
+            // Trigger browser standard driver printing sequence
+            window.print();
+        }
+
+        function shareViaWhatsapp() {
+            const name = document.getElementById('prtCustomerName').innerText;
+            const phone = document.getElementById('prtCustomerPhone').innerText;
+            const vNo = document.getElementById('prtVehicleNo').innerText;
+            const invoiceNo = document.getElementById('prtInvoiceNo').innerText;
+            const dueAmt = document.getElementById('prtBalance').innerText;
+            const grandTotal = document.getElementById('prtGrandTotal').innerText;
+
+            let cleanPhone = phone.replace(/\D/g, '');
+            if (!cleanPhone) {
+                alert("Please capture customer Contact/Whatsapp phone number digits correctly to dispatch WhatsApp message!");
+                return;
+            }
+
+            // India prefix mapping trigger fallback
+            if (cleanPhone.length === 10) {
+                cleanPhone = '91' + cleanPhone;
+            }
+
+            // Text message construct
+            const message = `🛠️ *Malar Auto Garage* 🛠️\n` +
+                            `Hello ${name},\n` +
+                            `Your vehicle billing details have been compiled:\n` +
+                            `• *Invoice #:* ${invoiceNo}\n` +
+                            `• *Bike/License Number:* ${vNo}\n` +
+                            `• *Grand Total:* ₹${grandTotal}\n` +
+                            `• *Outstanding Balance Due:* ₹${dueAmt}\n\n` +
+                            `Scan the UPI QR Code shown on your mobile dashboard invoice link to clear balance dues securely.\n\n` +
+                            `_Slogan: Best In Town_ #BLACKPERALRIDERS\n` +
+                            `Thank you!`;
+
+            const encodedMsg = encodeURIComponent(message);
+            const waUrl = `https://wa.me/${cleanPhone}?text=${encodedMsg}`;
+            
+            // Redirect trigger tab
+            window.open(waUrl, '_blank');
+            logActivity(`Dispatched invoice metadata directly to Whatsapp address: ${cleanPhone}`);
+        }
+
+        // -------------------------------------------------------------------------
+        // GENERAL UTILS IN OVERRIDES (SETTINGS)
+        // -------------------------------------------------------------------------
+        function overrideInvoiceCounter() {
+            const nextVal = parseInt(document.getElementById('cfgNextInvoiceNo').value);
+            if (isNaN(nextVal) || nextVal < 1) {
+                alert("Provide valid serial integers.");
+                return;
+            }
+            nextInvoiceNo = nextVal;
+            saveToLocalStorage('malar_next_invoice_no', nextInvoiceNo);
+            document.getElementById('billInvoiceNum').value = nextInvoiceNo;
+            alert(`Malar sequence point configured to invoice start index point: #${nextInvoiceNo}`);
+            logActivity(`Invoice numbering counter manually overridden to point: #${nextInvoiceNo}`);
+        }
+
+        function resetInvoiceCounter() {
+            const ok = confirm("Are you sure you want to restore counter settings starting index point to #1001?");
+            if (!ok) return;
+            nextInvoiceNo = 1001;
+            saveToLocalStorage('malar_next_invoice_no', nextInvoiceNo);
+            document.getElementById('billInvoiceNum').value = nextInvoiceNo;
+            document.getElementById('cfgNextInvoiceNo').value = nextInvoiceNo;
+            logActivity("Invoice serial counter restored to baseline baseline #1001");
+        }
+
+        function clearSavedCustomersDatabase() {
+            const ok = confirm("Warning: Purging suggestions registry eliminates auto-types indexing list. Clear?");
+            if (!ok) return;
+            customers = [];
+            saveToLocalStorage('malar_customers', customers);
+            logActivity("Customer registry completely purged.");
+        }
+    </script>
+</body>
+</html>

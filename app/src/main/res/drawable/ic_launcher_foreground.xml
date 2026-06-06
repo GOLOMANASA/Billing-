@@ -1,0 +1,21 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Background circle element inside safe-zone -->
+    <path
+        android:fillColor="#FFB300"
+        android:pathData="M54,54m-33,0a33,33 0,1 1,66 0a33,33 0,1 1,-66 0" />
+
+    <!-- Stylized Wrench / Spanner tool crossing vertically -->
+    <path
+        android:fillColor="#0F172A"
+        android:pathData="M54,34c-1.7,0 -3.2,0.6 -4.4,1.6l-5.6,-5.6c-1.2,-1.2 -3.1,-1.2 -4.2,0c-1.2,1.2 -1.2,3.1 0,4.2l5.6,5.6c-1,1.2 -1.6,2.7 -1.6,4.4c0,3.3 2.3,6.1 5.3,6.8l0,18.4c-0.8,0.3 -1.5,1 -1.8,1.9c-0.5,1.5 0.3,3.1 1.8,3.6c1.5,0.5 3.1,-0.3 3.6,-1.8c0.2,-0.6 0.2,-1.3 0,-1.9l0,-18.4c3,-0.7 5.3,-3.5 5.3,-6.8c0,-3.9 -3.1,-7 -7,-7zM54,44c-1.7,0 -3,-1.3 -3,-3s1.3,-3 3,-3s3,1.3 3,3s-1.3,3 -3,3z" />
+
+    <!-- Stylized gear or screwdriver elements -->
+    <path
+        android:fillColor="#0F172A"
+        android:pathData="M65,65l-4,-4l1.5,-1.5l4,4z" />
+</vector>
